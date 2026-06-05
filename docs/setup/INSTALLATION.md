@@ -40,7 +40,7 @@ docker compose logs -f network-provider
 
 ```
 Service             Port    Status
-────────────────────────────────────
+
 Network Provider    8002    Ready
 PostgreSQL          5432    Ready
 Redis Cache         6379    Ready
@@ -82,30 +82,30 @@ curl -X POST http://localhost:8002/subscriptions/sub-test/resourceGroups/rg-1/pr
 ### Architecture
 
 ```
-┌─────────────────────────────────────────────┐
-│ Kubernetes Cluster (Compute)                │
-│                                             │
-│  ┌────────────────────────────────────┐    │
-│  │ ITL Namespace                      │    │
-│  │                                    │    │
-│  │ ┌──────────────────────────────┐  │    │
-│  │ │ Network Provider Pod         │  │    │
-│  │ │ (Deployment: 3 replicas)     │  │    │
-│  │ │ Port: 8002                   │  │    │
-│  │ └──────────────────────────────┘  │    │
-│  │                                    │    │
-│  │ ┌──────────────────────────────┐  │    │
-│  │ │ Redis Cache (StatefulSet)    │  │    │
-│  │ │ Port: 6379                   │  │    │
-│  │ └──────────────────────────────┘  │    │
-│  └────────────────────────────────────┘    │
-│                                             │
-│  ┌────────────────────────────────────┐    │
-│  │ PostgreSQL (External or In-Cluster)    │
-│  │ Port: 5432                         │    │
-│  │ (Recommendation: use RDS or managed) │  │
-│  └────────────────────────────────────┘    │
-└─────────────────────────────────────────────┘
+
+ Kubernetes Cluster (Compute)                
+                                             
+      
+   ITL Namespace                          
+                                          
+         
+    Network Provider Pod               
+    (Deployment: 3 replicas)           
+    Port: 8002                         
+         
+                                          
+         
+    Redis Cache (StatefulSet)          
+    Port: 6379                         
+         
+      
+                                             
+      
+   PostgreSQL (External or In-Cluster)    
+   Port: 5432                             
+   (Recommendation: use RDS or managed)   
+      
+
 ```
 
 ### Prerequisites
@@ -426,9 +426,9 @@ docker compose logs network-provider
 kubectl logs deployment/network-provider -n itl-network
 
 # Common issues:
-# - Database connection error → Check DATABASE_URL
-# - Missing Keycloak → Check KEYCLOAK_URL
-# - Port already in use → Change API_PORT
+# - Database connection error  Check DATABASE_URL
+# - Missing Keycloak  Check KEYCLOAK_URL
+# - Port already in use  Change API_PORT
 ```
 
 ### Clusters not connecting
@@ -492,9 +492,9 @@ curl http://localhost:8002/health
 
 ## Next Steps
 
-- **Configure security?** → [Security Setup](SECURITY.md)
-- **Setup for production?** → [Production Deployment](PRODUCTION_DEPLOYMENT.md)
-- **Ready to use?** → [Getting Started](../guides/GETTING_STARTED.md)
+- **Configure security?**  [Security Setup](SECURITY.md)
+- **Setup for production?**  [Production Deployment](PRODUCTION_DEPLOYMENT.md)
+- **Ready to use?**  [Getting Started](../guides/GETTING_STARTED.md)
 
 ---
 

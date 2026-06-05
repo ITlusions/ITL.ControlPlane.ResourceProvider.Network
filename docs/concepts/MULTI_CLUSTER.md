@@ -7,23 +7,23 @@ How Network Provider deploys to 3 clusters simultaneously and ensures resilience
 ## The 3-Cluster Model
 
 ```
-┌──────────────────────────────────────┐
-│ Physical Network / Router            │
-│ 10.1.1.0/24  (BGP AS 65000)          │
-└────────────┬─────────────────────────┘
-             │ BGP peering
-    ┌────────┼────────┬────────┐
-    │        │        │        │
-    ▼        ▼        ▼        ▼
-┌────────┐ ┌────────┐ ┌────────┐
-│Storage │ │  Data  │ │Compute │
-│Cluster │ │Cluster │ │Cluster │
-│        │ │        │ │        │
-│VLAN:100│ │VLAN:200│ │VLAN:300│
-│10.200. │ │10.201. │ │10.202. │
-└────────┘ └────────┘ └────────┘
-    │         │         │
-    └─────────┼─────────┘
+
+ Physical Network / Router            
+ 10.1.1.0/24  (BGP AS 65000)          
+
+              BGP peering
+    
+                            
+                            
+  
+Storage    Data   Compute 
+Cluster  Cluster  Cluster 
+                          
+VLAN:100 VLAN:200 VLAN:300
+10.200.  10.201.  10.202. 
+  
+                      
+    
           ClusterMesh
           (Cilium)
 ```
@@ -75,7 +75,7 @@ How Network Provider deploys to 3 clusters simultaneously and ensures resilience
 
 ## How Multi-Cluster Deployment Works
 
-### Single Request → 3 Clusters
+### Single Request  3 Clusters
 
 When you create a VNet:
 
@@ -87,12 +87,12 @@ POST /subscriptions/sub-001/resourceGroups/rg1/providers/Microsoft.Network/virtu
 }
 
 # 2. Network Provider (parallel deployment):
-├─ Create namespace in Storage cluster
-├─ Create CiliumLoadBalancerIPPool in Storage cluster
-├─ Create namespace in Data cluster
-├─ Create CiliumLoadBalancerIPPool in Data cluster
-├─ Create namespace in Compute cluster
-└─ Create CiliumLoadBalancerIPPool in Compute cluster
+ Create namespace in Storage cluster
+ Create CiliumLoadBalancerIPPool in Storage cluster
+ Create namespace in Data cluster
+ Create CiliumLoadBalancerIPPool in Data cluster
+ Create namespace in Compute cluster
+ Create CiliumLoadBalancerIPPool in Compute cluster
 
 # 3. Response: 201 Created
 # The VNet now exists across all 3 clusters!
@@ -104,8 +104,8 @@ Once deployed, pods can communicate across clusters:
 
 ```
 Pod in Storage (10.0.1.5)          Pod in Compute (10.0.2.10)
-         │                                   │
-         └───────────────┬───────────────────┘
+                                            
+         
                     ClusterMesh
                  (Cilium service mesh)
          
@@ -143,12 +143,12 @@ kubectl --kubeconfig=compute expose deployment web --type=LoadBalancer --port=80
 User (external): curl http://10.200.0.50
 
 Network sees 3 potential backends:
-├─ 10.200.0.50 (Storage) ← Primary
-├─ 10.201.0.50 (Data)    ← Backup 1
-└─ 10.202.0.50 (Compute) ← Backup 2
+ 10.200.0.50 (Storage)  Primary
+ 10.201.0.50 (Data)     Backup 1
+ 10.202.0.50 (Compute)  Backup 2
 
 Storage cluster down?
-└─ Router redirects via BGP to Data/Compute clusters
+ Router redirects via BGP to Data/Compute clusters
    No downtime!
 ```
 
@@ -160,23 +160,23 @@ Storage cluster down?
 
 ```
 BEFORE:
-┌──────────────────────────────────────┐
-│ Network Traffic                      │
-│ ├─ 60% → Storage (10.200.0.0/24)    │
-│ ├─ 20% → Data (10.201.0.0/24)       │
-│ └─ 20% → Compute (10.202.0.0/24)    │
-└──────────────────────────────────────┘
+
+ Network Traffic                      
+  60%  Storage (10.200.0.0/24)    
+  20%  Data (10.201.0.0/24)       
+  20%  Compute (10.202.0.0/24)    
+
 
 Storage Cluster FAILS
-    ↓
+    
 
 AFTER (automatic):
-┌──────────────────────────────────────┐
-│ Network Traffic (redirected)         │
-│ ├─ 0% → Storage (OFFLINE)           │
-│ ├─ 50% → Data (10.201.0.0/24)       │  ← Increased
-│ └─ 50% → Compute (10.202.0.0/24)    │  ← Increased
-└──────────────────────────────────────┘
+
+ Network Traffic (redirected)         
+  0%  Storage (OFFLINE)           
+  50%  Data (10.201.0.0/24)          Increased
+  50%  Compute (10.202.0.0/24)       Increased
+
 
 DNS/BGP advertisements update automatically
 No manual intervention needed!
@@ -193,12 +193,12 @@ kubectl exec -it -n kube-system ds/cilium -- cilium clustermesh status
 # Output:
 # Cluster | Nodes | Ready
 # --------|-------|------
-# storage |   5   | ✓ 5/5
-# data    |   4   | ✓ 4/4
-# compute |   6   | ✓ 6/6
+# storage |   5   |  5/5
+# data    |   4   |  4/4
+# compute |   6   |  6/6
 
 # If a cluster fails:
-# storage |   0   | ✗ 0/5 (UNREACHABLE)
+# storage |   0   |  0/5 (UNREACHABLE)
 ```
 
 ---
@@ -213,11 +213,11 @@ Pod in Storage (sub-001, 10.0.1.5)
 Pod in Data (sub-001, 10.0.1.10)
 
 DNS Query:  pod-name.sub-001.svc.cluster.local
-    ↓
+    
 CoreDNS: Returns 10.0.1.10 (Cilium injects cross-cluster endpoint)
-    ↓
+    
 Cilium: Routes through ClusterMesh
-    ↓
+    
 Delivers traffic to Data cluster
 
 Result: Same namespace pod reachable across clusters!
@@ -243,8 +243,8 @@ spec:
 
 # From any pod (any cluster):
 # nslookup database.sub-001.svc.cluster.local
-# → Resolves to ClusterMesh endpoint
-# → Cilium routes traffic appropriately
+#  Resolves to ClusterMesh endpoint
+#  Cilium routes traffic appropriately
 ```
 
 ---
@@ -270,9 +270,9 @@ itlc resource create --resource-type networkSecurityGroups \
   }'
 
 # Network Provider creates CiliumNetworkPolicy in:
-├─ Storage cluster namespace sub-001
-├─ Data cluster namespace sub-001
-└─ Compute cluster namespace sub-001
+ Storage cluster namespace sub-001
+ Data cluster namespace sub-001
+ Compute cluster namespace sub-001
 
 # Result: NSG rule enforced across all 3 clusters!
 ```
@@ -285,37 +285,37 @@ itlc resource create --resource-type networkSecurityGroups \
 
 ```
 Phase 1: Proof of Concept
-├─ Storage: 3 nodes
-├─ Data: 2 nodes
-└─ Compute: 2 nodes
+ Storage: 3 nodes
+ Data: 2 nodes
+ Compute: 2 nodes
 Total: 7 nodes, ~350 pods
 
 Phase 2: Production
-├─ Storage: 5 nodes (persistent workloads)
-├─ Data: 8 nodes (analytics scaling)
-└─ Compute: 10 nodes (app autoscaling)
+ Storage: 5 nodes (persistent workloads)
+ Data: 8 nodes (analytics scaling)
+ Compute: 10 nodes (app autoscaling)
 Total: 23 nodes, ~1,500 pods
 
 Phase 3: Regional Expansion
-├─ Add new region with 3 new clusters
-├─ Same multi-cluster design
-└─ Cross-region ClusterMesh (or separate ControlPlane instance)
+ Add new region with 3 new clusters
+ Same multi-cluster design
+ Cross-region ClusterMesh (or separate ControlPlane instance)
 ```
 
 ### IP Pool Management
 
 ```
 Storage Cluster (VLAN 100)
-├─ LB IP Pool: 10.200.0.0/25 (128 IPs for LoadBalancers)
-└─ Reserved: 10.200.0.128/25 (128 IPs for future growth)
+ LB IP Pool: 10.200.0.0/25 (128 IPs for LoadBalancers)
+ Reserved: 10.200.0.128/25 (128 IPs for future growth)
 
 Data Cluster (VLAN 200)
-├─ LB IP Pool: 10.201.0.0/25
-└─ Reserved: 10.201.0.128/25
+ LB IP Pool: 10.201.0.0/25
+ Reserved: 10.201.0.128/25
 
 Compute Cluster (VLAN 300)
-├─ LB IP Pool: 10.202.0.0/25
-└─ Reserved: 10.202.0.128/25
+ LB IP Pool: 10.202.0.0/25
+ Reserved: 10.202.0.128/25
 
 Total: 384 external IPs available
 ```
@@ -346,7 +346,7 @@ curl http://localhost:8002/health
 {
   "status": "degraded",
   "clusters": {
-    "storage": "unreachable",   ← ERROR
+    "storage": "unreachable",    ERROR
     "data": "connected",
     "compute": "connected"
   }
@@ -377,22 +377,24 @@ alert: IPPoolLow
 
 ## Best Practices
 
-### ✅ DO:
+### Best Practices:
 
-- ✅ Deploy to all 3 clusters simultaneously (handled by Network Provider)
-- ✅ Monitor ClusterMesh status regularly
-- ✅ Plan IP pools with growth in mind
-- ✅ Test failover scenarios in staging
-- ✅ Use cluster affinity for stateful workloads (pin to Storage cluster)
-- ✅ Distribute load across clusters
+#### DO:
 
-### ❌ DON'T:
+- [x] Deploy to all 3 clusters simultaneously (handled by Network Provider)
+- [x] Monitor ClusterMesh status regularly
+- [x] Plan IP pools with growth in mind
+- [x] Test failover scenarios in staging
+- [x] Use cluster affinity for stateful workloads (pin to Storage cluster)
+- [x] Distribute load across clusters
 
-- ❌ Deploy to only 1 cluster (defeats multi-cluster benefits)
-- ❌ Assume one cluster can handle all traffic
-- ❌ Ignore ClusterMesh health warnings
-- ❌ Mix cluster roles (e.g., run databases on Compute cluster)
-- ❌ Use tiny IP pools (plan for 2x growth minimum)
+### [-] DON'T:
+
+- [-] Deploy to only 1 cluster (defeats multi-cluster benefits)
+- [-] Assume one cluster can handle all traffic
+- [-] Ignore ClusterMesh health warnings
+- [-] Mix cluster roles (e.g., run databases on Compute cluster)
+- [-] Use tiny IP pools (plan for 2x growth minimum)
 
 ---
 
@@ -433,9 +435,9 @@ kubectl --kubeconfig={unreachable-cluster} exec -it -n kube-system ds/cilium -- 
 
 ## Next Steps
 
-- **Ready to deploy?** → [Installation](../setup/INSTALLATION.md)
-- **Need architecture details?** → [Architecture](ARCHITECTURE.md)
-- **Configuring BGP?** → [BGP Setup](../setup/BGP_VLAN_SETUP.md)
+- **Ready to deploy?**  [Installation](../setup/INSTALLATION.md)
+- **Need architecture details?**  [Architecture](ARCHITECTURE.md)
+- **Configuring BGP?**  [BGP Setup](../setup/BGP_VLAN_SETUP.md)
 
 ---
 

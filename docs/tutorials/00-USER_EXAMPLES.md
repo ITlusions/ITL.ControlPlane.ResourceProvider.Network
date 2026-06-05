@@ -16,8 +16,8 @@ Real-world examples showing how end-users deploy infrastructure **without needin
 
 ### Step 1: Create a Virtual Network
 
-1. Log in to ITL Control Plane Portal → `https://controlplane.itlusions.com`
-2. Click **Create Resource** → **Virtual Network**
+1. Log in to ITL Control Plane Portal  `https://controlplane.itlusions.com`
+2. Click **Create Resource**  **Virtual Network**
 3. Fill in:
    - **Name:** `prod-vnet`
    - **Subscription:** `Production` (already assigned to you)
@@ -27,7 +27,7 @@ Real-world examples showing how end-users deploy infrastructure **without needin
 
 **Portal shows:**
 ```
-✓ Virtual Network created
+ Virtual Network created
   Name: prod-vnet
   Address Space: 10.0.0.0/16
   Status: Provisioned (2.3s)
@@ -39,7 +39,7 @@ Real-world examples showing how end-users deploy infrastructure **without needin
 
 ### Step 2: Create Subnets
 
-Portal → **prod-vnet** → **Subnets** → **+ Add Subnet**
+Portal  **prod-vnet**  **Subnets**  **+ Add Subnet**
 
 | Subnet Name | CIDR | Purpose |
 |---|---|---|
@@ -49,9 +49,9 @@ Portal → **prod-vnet** → **Subnets** → **+ Add Subnet**
 
 **Portal shows:**
 ```
-✓ Subnet "frontend" created (10.0.1.0/24)
-✓ Subnet "backend" created (10.0.2.0/24)
-✓ Subnet "database" created (10.0.3.0/24)
+ Subnet "frontend" created (10.0.1.0/24)
+ Subnet "backend" created (10.0.2.0/24)
+ Subnet "database" created (10.0.3.0/24)
 
   Subnets: 3/5 (you can create 2 more)
 ```
@@ -60,18 +60,18 @@ Portal → **prod-vnet** → **Subnets** → **+ Add Subnet**
 
 ### Step 3: Create Firewall Rules (NSGs)
 
-Portal → **Create Resource** → **Network Security Group**
+Portal  **Create Resource**  **Network Security Group**
 
 **Frontend NSG:**
 ```
 Name: nsg-frontend
 
 Inbound Rules:
-  ✓ Allow HTTP (80) from 0.0.0.0/0
-  ✓ Allow HTTPS (443) from 0.0.0.0/0
+   Allow HTTP (80) from 0.0.0.0/0
+   Allow HTTPS (443) from 0.0.0.0/0
 
 Outbound Rules:
-  ✓ Allow all
+   Allow all
 ```
 
 **Backend NSG:**
@@ -79,11 +79,11 @@ Outbound Rules:
 Name: nsg-backend
 
 Inbound Rules:
-  ✓ Allow 8080 from nsg-frontend (talk to frontend)
-  ✓ Allow 3306 from nsg-database (talk to database)
+   Allow 8080 from nsg-frontend (talk to frontend)
+   Allow 3306 from nsg-database (talk to database)
 
 Outbound Rules:
-  ✓ Allow all
+   Allow all
 ```
 
 **Database NSG:**
@@ -91,17 +91,17 @@ Outbound Rules:
 Name: nsg-database
 
 Inbound Rules:
-  ✓ Allow 3306 from nsg-backend (ONLY from backend)
+   Allow 3306 from nsg-backend (ONLY from backend)
 
 Outbound Rules:
-  ✗ Deny all (database doesn't need outbound)
+   Deny all (database doesn't need outbound)
 ```
 
 **Portal shows:**
 ```
-✓ NSG "nsg-frontend" created
-✓ NSG "nsg-backend" created
-✓ NSG "nsg-database" created
+ NSG "nsg-frontend" created
+ NSG "nsg-backend" created
+ NSG "nsg-database" created
 
   Your infrastructure is protected!
 ```
@@ -110,7 +110,7 @@ Outbound Rules:
 
 ### Step 4: Expose API Gateway to Internet
 
-Portal → **Create Resource** → **Load Balancer**
+Portal  **Create Resource**  **Load Balancer**
 
 ```
 Name: api-gateway-lb
@@ -118,23 +118,23 @@ VNet: prod-vnet
 Subnet: frontend
 
 Frontend Configuration:
-  ✓ Public access (VLAN IP)
+   Public access (VLAN IP)
   
 Backend Pool:
-  ✓ Add your Kubernetes service
+   Add your Kubernetes service
 
 Health Check:
-  ✓ HTTP /health (30s)
+   HTTP /health (30s)
 ```
 
 **Portal shows:**
 ```
-✓ Load Balancer "api-gateway-lb" created
+ Load Balancer "api-gateway-lb" created
 
   External IP: 10.200.0.50
   Status: Ready
   
-  ➜ Your API is now accessible at: http://10.200.0.50
+   Your API is now accessible at: http://10.200.0.50
 ```
 
 ---
@@ -152,7 +152,7 @@ itlc vnet create \
   --region eastus
 
 # Response:
-# ✓ VNet created: prod-vnet (10.0.0.0/16)
+#  VNet created: prod-vnet (10.0.0.0/16)
 # 2.3 seconds
 
 # 2. Create subnets
@@ -172,9 +172,9 @@ itlc subnet create \
   --prefix 10.0.3.0/24
 
 # Response:
-# ✓ Subnet "frontend" created
-# ✓ Subnet "backend" created
-# ✓ Subnet "database" created
+#  Subnet "frontend" created
+#  Subnet "backend" created
+#  Subnet "database" created
 
 # 3. Create NSGs (firewall rules)
 itlc nsg create \
@@ -193,9 +193,9 @@ itlc nsg create \
   --outbound-rule "deny all"
 
 # Response:
-# ✓ NSG "nsg-frontend" created
-# ✓ NSG "nsg-backend" created
-# ✓ NSG "nsg-database" created
+#  NSG "nsg-frontend" created
+#  NSG "nsg-backend" created
+#  NSG "nsg-database" created
 
 # 4. Create load balancer (expose to internet)
 itlc lb create \
@@ -207,7 +207,7 @@ itlc lb create \
   --health-check-path /health
 
 # Response:
-# ✓ Load Balancer "api-gateway-lb" created
+#  Load Balancer "api-gateway-lb" created
 # 
 # External IP: 10.200.0.50
 # Status: Ready
@@ -419,7 +419,7 @@ terraform apply
 # 
 # api_gateway_ip = 10.200.0.50
 #
-# ➜ Access your API at: http://10.200.0.50
+#  Access your API at: http://10.200.0.50
 ```
 
 ---
@@ -640,7 +640,7 @@ az deployment group create \
 
 ---
 
-## Option 5: Pulumi (Python) - In Development 🚀
+## Option 5: Pulumi (Python) - In Development 
 
 **Status**: Network Provider team is implementing native components  
 **Package**: `itl-controlplane-network-pulumi` (coming to PyPI)  
@@ -751,10 +751,10 @@ pulumi.export('vnet_id', vnet_response.json()['id'])
 
 ### Track Development
 
-- 📄 **Implementation Plan**: [PULUMI_DEVELOPMENT_GUIDE.md](../../PULUMI_DEVELOPMENT_GUIDE.md)
-- 🐛 **GitHub Issue**: Coming soon
-- 📦 **Package**: `itl-controlplane-network-pulumi`
-- ⏱️ **Timeline**: ~2 weeks
+-  **Implementation Plan**: [PULUMI_DEVELOPMENT_GUIDE.md](../../PULUMI_DEVELOPMENT_GUIDE.md)
+-  **GitHub Issue**: Coming soon
+-  **Package**: `itl-controlplane-network-pulumi`
+-  **Timeline**: ~2 weeks
 
 ---
 
@@ -762,11 +762,11 @@ pulumi.export('vnet_id', vnet_response.json()['id'])
 
 | Method | Best For | Skill Level | Speed | Language | Status |
 |--------|----------|-------------|-------|----------|--------|
-| **Portal** | First-time setup, learning | Beginner | Medium | Visual | ✅ Ready |
-| **CLI (itlc)** | Quick deploys, scripting | Intermediate | Fast | Bash/PowerShell | ✅ Ready |
-| **Terraform** | Team workflows, GitOps | Advanced | Very Fast | HCL | ✅ Ready |
-| **Bicep** | Azure-aligned orgs | Intermediate | Very Fast | Bicep | ✅ Ready |
-| **Pulumi** | Python developers, CI/CD | Advanced | Very Fast | Python | 🚀 In Dev (Network Team) |
+| **Portal** | First-time setup, learning | Beginner | Medium | Visual | [x] Ready |
+| **CLI (itlc)** | Quick deploys, scripting | Intermediate | Fast | Bash/PowerShell | [x] Ready |
+| **Terraform** | Team workflows, GitOps | Advanced | Very Fast | HCL | [x] Ready |
+| **Bicep** | Azure-aligned orgs | Intermediate | Very Fast | Bicep | [x] Ready |
+| **Pulumi** | Python developers, CI/CD | Advanced | Very Fast | Python |  In Dev (Network Team) |
 
 ---
 
@@ -775,14 +775,14 @@ pulumi.export('vnet_id', vnet_response.json()['id'])
 **You deploy:** A simple VNet with 3 subnets
 
 **Automatically, you get:**
-- ✅ Kubernetes namespaces for isolation (one per subscription)
-- ✅ Cilium networking pools in all 3 clusters
-- ✅ Cilium network policies (translated from NSGs)
-- ✅ BGP route advertisements to your physical network
-- ✅ Multi-cluster synchronization
-- ✅ Audit logging and compliance tracking
-- ✅ DNS resolution and service discovery
-- ✅ HA failover across clusters
+- [x] Kubernetes namespaces for isolation (one per subscription)
+- [x] Cilium networking pools in all 3 clusters
+- [x] Cilium network policies (translated from NSGs)
+- [x] BGP route advertisements to your physical network
+- [x] Multi-cluster synchronization
+- [x] Audit logging and compliance tracking
+- [x] DNS resolution and service discovery
+- [x] HA failover across clusters
 
 **But you don't need to manage any of this.** It just works!
 
@@ -790,9 +790,9 @@ pulumi.export('vnet_id', vnet_response.json()['id'])
 
 ## Next Steps
 
-- Ready to scale? → [Multi-Subscription Peering](03-MULTI_SUBSCRIPTION.md)
-- Need Kubernetes integration? → [K8s Deployment](../guides/users/KUBERNETES_USER.md)
-- Managing via API? → [API User Guide](../guides/users/ITL_API_USER.md)
+- Ready to scale?  [Multi-Subscription Peering](03-MULTI_SUBSCRIPTION.md)
+- Need Kubernetes integration?  [K8s Deployment](../guides/users/KUBERNETES_USER.md)
+- Managing via API?  [API User Guide](../guides/users/ITL_API_USER.md)
 
 ---
 

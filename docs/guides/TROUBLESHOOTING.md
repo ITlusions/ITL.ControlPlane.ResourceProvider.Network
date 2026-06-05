@@ -152,7 +152,7 @@ kubectl get ciliumloadbalancerippools -n sub-00000001
    kubectl get ciliumloadbalancerippools -A | grep pool-a1b2c3d4
    
    # Verify subscription mapping
-   # sub-00000001 → sub-00000001 namespace
+   # sub-00000001  sub-00000001 namespace
    ```
 
 3. **Database out of sync:**

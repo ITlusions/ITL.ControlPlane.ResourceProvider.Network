@@ -34,10 +34,10 @@ TOKEN=$(curl -s https://keycloak.itlusions.com/auth/realms/itlusions/protocol/op
 ### Service-to-Service Authentication
 
 ```bash
-# Network Provider → Kubernetes API
+# Network Provider  Kubernetes API
 # Use service account tokens (in kubeconfig)
 
-# Network Provider → PostgreSQL
+# Network Provider  PostgreSQL
 # Use connection string with credentials
 DATABASE_URL=postgresql://np_user:password@postgres:5432/network_provider
 # Never commit passwords to Git!
@@ -222,13 +222,13 @@ class VNetProperties(BaseModel):
 ### SQL Injection Prevention
 
 ```python
-# ✓ SAFE: Using parameterized queries
+#  SAFE: Using parameterized queries
 result = await db.execute(
     "SELECT * FROM resources WHERE id = :id AND subscription_id = :sub",
     {"id": resource_id, "sub": subscription_id}
 )
 
-# ✗ UNSAFE: String concatenation
+#  UNSAFE: String concatenation
 result = await db.execute(
     f"SELECT * FROM resources WHERE id = '{resource_id}'"
 )
@@ -295,10 +295,10 @@ logger.info(f"Request: {mask_sensitive_fields(request.dict())}")
 
 ### GDPR Compliance
 
-- ✅ User data only stored if necessary
-- ✅ Data deletion on request (right to be forgotten)
-- ✅ Audit logs track who accessed what
-- ✅ Data minimization (don't store unnecessary fields)
+- [x] User data only stored if necessary
+- [x] Data deletion on request (right to be forgotten)
+- [x] Audit logs track who accessed what
+- [x] Data minimization (don't store unnecessary fields)
 
 ```python
 @app.delete("/subscriptions/{sub}/user-data")
@@ -326,11 +326,11 @@ async def delete_user_data(sub: str, user: User):
 
 ### SOC 2 Compliance
 
-- ✅ Access control (RBAC)
-- ✅ Audit logs
-- ✅ Encryption (in transit & at rest)
-- ✅ Change management (Git commits)
-- ✅ Incident response procedures
+- [x] Access control (RBAC)
+- [x] Audit logs
+- [x] Encryption (in transit & at rest)
+- [x] Change management (Git commits)
+- [x] Incident response procedures
 
 ---
 
@@ -387,17 +387,17 @@ git checkout -b feature/add-resource
 git commit -m "feat: add VNet resource"
 
 # 3. Create pull request
-# → Code review required
-# → Tests must pass
-# → Security scan must pass
+#  Code review required
+#  Tests must pass
+#  Security scan must pass
 
 # 4. Merge to main
-# → GitHub Actions deploys automatically
+#  GitHub Actions deploys automatically
 
 # 5. Verification
-# → Staging environment tested
-# → Smoke tests run
-# → Promoted to production
+#  Staging environment tested
+#  Smoke tests run
+#  Promoted to production
 ```
 
 ### Incident Response
@@ -427,7 +427,7 @@ Severity 3 (Medium):
 
 ## Best Practices Checklist
 
-### Security ✓
+### Security 
 
 - [x] Enable HTTPS/TLS everywhere
 - [x] Use strong authentication (OIDC)
@@ -440,7 +440,7 @@ Severity 3 (Medium):
 - [x] Non-root container processes
 - [x] Secrets in vault, not Git
 
-### Availability ✓
+### Availability 
 
 - [x] Multi-cluster deployment
 - [x] Database replication
@@ -451,7 +451,7 @@ Severity 3 (Medium):
 - [x] Load balancing
 - [x] Rate limiting
 
-### Compliance ✓
+### Compliance 
 
 - [x] Audit logging
 - [x] Data retention policies
@@ -465,9 +465,9 @@ Severity 3 (Medium):
 
 ## Next Steps
 
-- **Deploy securely?** → [Production Deployment](PRODUCTION_DEPLOYMENT.md)
-- **Monitor security?** → [Monitoring](../tasks/MONITORING.md)
-- **Incident response?** → [Troubleshooting](../reference/TROUBLESHOOTING.md)
+- **Deploy securely?**  [Production Deployment](PRODUCTION_DEPLOYMENT.md)
+- **Monitor security?**  [Monitoring](../tasks/MONITORING.md)
+- **Incident response?**  [Troubleshooting](../reference/TROUBLESHOOTING.md)
 
 ---
 

@@ -21,7 +21,7 @@ kubectl expose deployment myapp --port=80 --target-port=8080 --type=LoadBalancer
 kubectl get svc myapp
 # NAME    TYPE           CLUSTER-IP    EXTERNAL-IP       PORT(S)
 # myapp   LoadBalancer   10.0.50.10    10.200.0.25       80:31234/TCP
-#                                      ↑
+#                                      
 #                        Direct VLAN IP - ready to use!
 
 # 4. Access from your network
@@ -97,12 +97,12 @@ metadata:
   namespace: prod-apps
   labels:
     app: web-api
-    expose: external        # ← KEY: Tells Cilium to assign external IP
+    expose: external        #  KEY: Tells Cilium to assign external IP
   annotations:
     description: "Production Web API - Public endpoint"
     environment: "production"
 spec:
-  type: LoadBalancer        # ← Creates a service with external IP
+  type: LoadBalancer        #  Creates a service with external IP
   selector:
     app: web-api
     tier: frontend
@@ -141,7 +141,7 @@ kubectl get svc web-api -n prod-apps -w
 # Output (after a few seconds):
 # NAME      TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)
 # web-api   LoadBalancer   10.0.50.5       10.200.0.50     80:32000/TCP,443:32443/TCP
-#                                          ↑
+#                                          
 #                           Your VLAN IP - directly routable!
 ```
 
@@ -181,7 +181,7 @@ kubectl describe svc web-api -n prod-apps
 # Selector:                 app=web-api,tier=frontend
 # Type:                     LoadBalancer
 # IP:                       10.0.50.5
-# LoadBalancer Ingress:     10.200.0.50      # ← Your VLAN IP
+# LoadBalancer Ingress:     10.200.0.50      #  Your VLAN IP
 # Port:                     http  80/TCP
 # TargetPort:               8080/TCP
 # NodePort:                 32000/TCP
@@ -468,7 +468,7 @@ kubectl get svc myapp
 
 **Causes & Fixes:**
 
-1. **Missing label** — Service needs `expose: external` label
+1. **Missing label**  Service needs `expose: external` label
 
 ```bash
 # Add label
@@ -479,7 +479,7 @@ kubectl delete svc myapp
 kubectl expose deployment myapp --type=LoadBalancer --labels=expose=external
 ```
 
-2. **No IP pool available** — All IPs allocated
+2. **No IP pool available**  All IPs allocated
 
 ```bash
 # Check IP pool status
@@ -489,7 +489,7 @@ kubectl describe ciliumloadbalancerippools -A
 # Edit CiliumLoadBalancerIPPool and increase CIDR range
 ```
 
-3. **Cilium not ready** — Pods still initializing
+3. **Cilium not ready**  Pods still initializing
 
 ```bash
 # Check Cilium status
@@ -602,22 +602,24 @@ kubectl get svc -n prod-apps -l expose=external
 
 ## Best Practices
 
-### ✅ DO:
+### Best Practices:
 
-- ✅ Use descriptive service names (`api-gateway`, `database`, not `service1`)
-- ✅ Add labels for organization (`expose=external`, `tier=backend`)
-- ✅ Use health checks (livenessProbe, readinessProbe)
-- ✅ Set resource requests/limits
-- ✅ Use multiple replicas for HA
-- ✅ Monitor your services regularly
+#### DO:
 
-### ❌ DON'T:
+- [x] Use descriptive service names (`api-gateway`, `database`, not `service1`)
+- [x] Add labels for organization (`expose=external`, `tier=backend`)
+- [x] Use health checks (livenessProbe, readinessProbe)
+- [x] Set resource requests/limits
+- [x] Use multiple replicas for HA
+- [x] Monitor your services regularly
 
-- ❌ Use default namespace for production services
-- ❌ Forget to add `expose: external` label
-- ❌ Use hardcoded pod IPs in configurations
-- ❌ Deploy single replicas for critical services
-- ❌ Assume external IPs are static (they can change if service recreated)
+### [-] DON'T:
+
+- [-] Use default namespace for production services
+- [-] Forget to add `expose: external` label
+- [-] Use hardcoded pod IPs in configurations
+- [-] Deploy single replicas for critical services
+- [-] Assume external IPs are static (they can change if service recreated)
 
 ---
 
@@ -665,6 +667,6 @@ iperf3 -c 10.200.0.50
   - Network connectivity test results
 
 **Documentation:**
-- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP.md) — Infrastructure setup
-- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE.md) — How everything works
-- [../CONFIGURATION.md](../CONFIGURATION.md) — System configuration
+- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP.md)  Infrastructure setup
+- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE.md)  How everything works
+- [../CONFIGURATION.md](../CONFIGURATION.md)  System configuration

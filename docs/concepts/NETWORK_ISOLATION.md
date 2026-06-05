@@ -9,16 +9,16 @@ How Network Provider isolates workloads and enforces security policies.
 In a multi-tenant Kubernetes cluster, you need to ensure:
 
 ```
-✗ Subscription A pods can't access Subscription B's data
-✗ Subscription A can't sniff Subscription B's traffic
-✗ Subscription A can't modify Subscription B's policies
-✗ Subscription A can't see Subscription B's services
+ Subscription A pods can't access Subscription B's data
+ Subscription A can't sniff Subscription B's traffic
+ Subscription A can't modify Subscription B's policies
+ Subscription A can't see Subscription B's services
 
 But:
 
-✓ Within Subscription A, pods communicate freely
-✓ Cross-subscription communication only when explicitly allowed (peering)
-✓ Network policies enforced consistently across clusters
+ Within Subscription A, pods communicate freely
+ Cross-subscription communication only when explicitly allowed (peering)
+ Network policies enforced consistently across clusters
 ```
 
 ---
@@ -31,12 +31,12 @@ Each subscription gets its own namespace:
 
 ```
 Storage Cluster
-├─ Namespace: sub-a
-│  └─ Pods, Services, all resources isolated
-├─ Namespace: sub-b
-│  └─ Pods, Services, all resources isolated
-└─ Namespace: kube-system
-   └─ Cilium, CoreDNS, system pods
+ Namespace: sub-a
+   Pods, Services, all resources isolated
+ Namespace: sub-b
+   Pods, Services, all resources isolated
+ Namespace: kube-system
+    Cilium, CoreDNS, system pods
 ```
 
 **Isolation provided:**
@@ -141,18 +141,18 @@ CiliumNetworkPolicy:
 ```yaml
 Namespace: sub-prod
 Resources:
-├─ VNet: 10.0.0.0/16
-├─ NSG: Allow 80/443 from internet, 5432 from app tier
-└─ Pods:
-   ├─ web-server (port 80)
-   └─ database (port 5432)
+ VNet: 10.0.0.0/16
+ NSG: Allow 80/443 from internet, 5432 from app tier
+ Pods:
+    web-server (port 80)
+    database (port 5432)
 
 Security:
-✓ Only web-server and database pods
-✓ Web-server can receive traffic on 80
-✓ Database only accepts from web-server on 5432
-✗ No external access to database
-✗ No pods from sub-staging can access
+ Only web-server and database pods
+ Web-server can receive traffic on 80
+ Database only accepts from web-server on 5432
+ No external access to database
+ No pods from sub-staging can access
 ```
 
 ### Subscription B (Staging)
@@ -160,31 +160,31 @@ Security:
 ```yaml
 Namespace: sub-staging
 Resources:
-├─ VNet: 10.1.0.0/16 (different CIDR)
-├─ NSG: Allow 80 from anywhere
-└─ Pods:
-   ├─ web-server (port 80)
-   └─ debug-pod (all traffic for testing)
+ VNet: 10.1.0.0/16 (different CIDR)
+ NSG: Allow 80 from anywhere
+ Pods:
+    web-server (port 80)
+    debug-pod (all traffic for testing)
 
 Security:
-✓ Completely separate from sub-prod
-✓ Can access databases within sub-staging
-✗ Cannot access any sub-prod resources
-✗ sub-prod cannot access this namespace
+ Completely separate from sub-prod
+ Can access databases within sub-staging
+ Cannot access any sub-prod resources
+ sub-prod cannot access this namespace
 ```
 
 ### Network Paths (Blocked)
 
 ```
 sub-prod web-server (10.0.1.5)
-    ├─ Can reach: Database (same namespace) ✓
-    ├─ Can reach: sub-staging pods (NO - blocked by namespace isolation) ✗
-    └─ Result: Traffic blocked at Cilium
+     Can reach: Database (same namespace) 
+     Can reach: sub-staging pods (NO - blocked by namespace isolation) 
+     Result: Traffic blocked at Cilium
 
 sub-staging debug-pod (10.1.1.10)
-    ├─ Can reach: Web server (same namespace) ✓
-    ├─ Can reach: sub-prod database (NO - blocked by Cilium policy) ✗
-    └─ Result: Traffic blocked at Cilium
+     Can reach: Web server (same namespace) 
+     Can reach: sub-prod database (NO - blocked by Cilium policy) 
+     Result: Traffic blocked at Cilium
 ```
 
 ---
@@ -196,7 +196,7 @@ sub-staging debug-pod (10.1.1.10)
 To allow pods from sub-a to reach services in sub-b:
 
 ```bash
-# 1. Create peering from sub-a → sub-b
+# 1. Create peering from sub-a  sub-b
 itlc resource create --resource-type "virtualNetworks/virtualNetworkPeerings" \
   --resource-name app-to-db-peering \
   --properties '{
@@ -239,10 +239,10 @@ CiliumNetworkPolicy:
 
 ```
 sub-a pod (10.0.1.5)
-    → Tries to reach 10.1.1.10 (sub-b database)
-    → Cilium checks: "Is this allowed?"
-    → Policy found: Allow 10.0.0.0/16 → 10.1.0.0/16 on 5432
-    → Traffic ALLOWED ✓
+     Tries to reach 10.1.1.10 (sub-b database)
+     Cilium checks: "Is this allowed?"
+     Policy found: Allow 10.0.0.0/16  10.1.0.0/16 on 5432
+     Traffic ALLOWED 
 ```
 
 ---
@@ -274,9 +274,9 @@ itlc resource create --resource-type privateEndpoints \
 
 ```
 Private Link Service (sub-b)
-  ↓ Only approved connections
+   Only approved connections
 Private Endpoint (sub-a)
-  ↓ No internet access required
+   No internet access required
 Result: Direct internal connection, no external IP exposure
 ```
 
@@ -288,9 +288,9 @@ Result: Direct internal connection, no external IP exposure
 
 ```
 sub-a pod (10.0.1.5)
-    → Unencrypted traffic to sub-b (10.1.1.10)
-    → Anyone on network can sniff data
-    ✗ Not recommended for sensitive data
+     Unencrypted traffic to sub-b (10.1.1.10)
+     Anyone on network can sniff data
+     Not recommended for sensitive data
 ```
 
 ### With Cilium mTLS
@@ -302,10 +302,10 @@ cilium install --helm-set serviceMesh.enabled=true
 
 ```
 sub-a pod (10.0.1.5)
-    → TLS encrypted to sub-b (10.1.1.10)
-    → Automatic certificate management
-    → Perfect forward secrecy
-    ✓ Encrypted end-to-end
+     TLS encrypted to sub-b (10.1.1.10)
+     Automatic certificate management
+     Perfect forward secrecy
+     Encrypted end-to-end
 ```
 
 ---
@@ -397,22 +397,24 @@ ORDER BY timestamp DESC
 
 ## Best Practices
 
-### ✅ DO:
+### Best Practices:
 
-- ✅ Use namespace isolation (always, one subscription per namespace)
-- ✅ Create explicit NSG rules (deny-by-default approach)
-- ✅ Enable mTLS for sensitive cross-subscription communication
-- ✅ Monitor Cilium policy logs regularly
-- ✅ Audit network changes
-- ✅ Test policies in staging before production
+#### DO:
 
-### ❌ DON'T:
+- [x] Use namespace isolation (always, one subscription per namespace)
+- [x] Create explicit NSG rules (deny-by-default approach)
+- [x] Enable mTLS for sensitive cross-subscription communication
+- [x] Monitor Cilium policy logs regularly
+- [x] Audit network changes
+- [x] Test policies in staging before production
 
-- ❌ Assume namespaces are fully isolated (use Cilium policies too)
-- ❌ Leave "allow all" policies in production
-- ❌ Ignore audit logs
-- ❌ Use overlapping NSG names across subscriptions (confusing)
-- ❌ Create peering without business justification
+### [-] DON'T:
+
+- [-] Assume namespaces are fully isolated (use Cilium policies too)
+- [-] Leave "allow all" policies in production
+- [-] Ignore audit logs
+- [-] Use overlapping NSG names across subscriptions (confusing)
+- [-] Create peering without business justification
 
 ---
 
@@ -452,9 +454,9 @@ kubectl exec pod-a -n sub-a -- ping pod-b.sub-b.svc.cluster.local
 
 ## Next Steps
 
-- **Creating NSGs?** → [Manage NSGs](../tasks/MANAGE_NSGS.md)
-- **Setting up peering?** → [Setup Peering](../tasks/SETUP_PEERING.md)
-- **Need troubleshooting?** → [Troubleshooting](../reference/TROUBLESHOOTING.md)
+- **Creating NSGs?**  [Manage NSGs](../tasks/MANAGE_NSGS.md)
+- **Setting up peering?**  [Setup Peering](../tasks/SETUP_PEERING.md)
+- **Need troubleshooting?**  [Troubleshooting](../reference/TROUBLESHOOTING.md)
 
 ---
 

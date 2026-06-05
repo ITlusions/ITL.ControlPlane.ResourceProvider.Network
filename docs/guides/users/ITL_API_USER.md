@@ -16,16 +16,16 @@ Within the ITL ControlPlane model:
 
 ```
 Your ITL Subscription (sub-00000001)
-├── VNet (prod-vnet: 10.0.0.0/16)
-│   └── Subnet (10.0.1.0/24)
-├── Load Balancer (my-api-lb)
-│   └── Gets VLAN IP: 10.200.0.50
-└── Application Gateway (my-gateway)
-    └── Gets VLAN IP: 10.200.0.51
+ VNet (prod-vnet: 10.0.0.0/16)
+    Subnet (10.0.1.0/24)
+ Load Balancer (my-api-lb)
+    Gets VLAN IP: 10.200.0.50
+ Application Gateway (my-gateway)
+     Gets VLAN IP: 10.200.0.51
 
 Physical Network (VLAN 100: 10.200.0.0/24)
-├── 10.200.0.50 (my-api-lb) ← Direct routing via BGP
-└── 10.200.0.51 (my-gateway) ← Direct routing via BGP
+ 10.200.0.50 (my-api-lb)  Direct routing via BGP
+ 10.200.0.51 (my-gateway)  Direct routing via BGP
 ```
 
 ---
@@ -270,7 +270,7 @@ itlc resource get \
 ```bash
 # From anywhere on your physical network
 curl http://10.200.0.50
-# ✓ Direct VLAN access!
+#  Direct VLAN access!
 
 # From inside cluster (using internal IP)
 kubectl run debug --image=curlimages/curl -it -- curl http://my-api-lb.default.svc.cluster.local
@@ -403,8 +403,8 @@ itlc resource get --resource-type loadBalancers --resource-name internal-lb
 # VLAN IP: 10.200.0.101
 
 # Access:
-curl http://10.200.0.100           # ✓ Public gateway
-curl http://10.200.0.101           # ✓ Internal LB (from authorized hosts)
+curl http://10.200.0.100           #  Public gateway
+curl http://10.200.0.101           #  Internal LB (from authorized hosts)
 ```
 
 ---
@@ -448,10 +448,10 @@ itlc resource create --resource-type loadBalancers \
 ### Network Isolation
 
 ```
-Both subscriptions use 10.0.0.0/16 → NO CONFLICT (Kubernetes namespace isolation)
+Both subscriptions use 10.0.0.0/16  NO CONFLICT (Kubernetes namespace isolation)
 
-Subscription A traffic: 10.200.0.50 → Namespace sub-00000001 → Isolated by Cilium policy
-Subscription B traffic: 10.200.0.60 → Namespace sub-00000002 → Isolated by Cilium policy
+Subscription A traffic: 10.200.0.50  Namespace sub-00000001  Isolated by Cilium policy
+Subscription B traffic: 10.200.0.60  Namespace sub-00000002  Isolated by Cilium policy
 ```
 
 ---
@@ -687,22 +687,24 @@ itlc resource get --resource-type loadBalancers --resource-name myresource --clu
 
 ## Best Practices
 
-### ✅ DO:
+### Best Practices:
 
-- ✅ Use descriptive resource names (`api-lb`, not `lb1`)
-- ✅ Organize by resource group (prod-rg, staging-rg)
-- ✅ Use multiple replicas for HA
-- ✅ Monitor resource health regularly
-- ✅ Keep track of VLAN IP allocations
-- ✅ Document your resources for your team
+#### DO:
 
-### ❌ DON'T:
+- [x] Use descriptive resource names (`api-lb`, not `lb1`)
+- [x] Organize by resource group (prod-rg, staging-rg)
+- [x] Use multiple replicas for HA
+- [x] Monitor resource health regularly
+- [x] Keep track of VLAN IP allocations
+- [x] Document your resources for your team
 
-- ❌ Share VLAN IPs across applications
-- ❌ Expose internal services without NSGs
-- ❌ Assume VLAN IPs are permanently static (recreate = new IP)
-- ❌ Forget to document backend configurations
-- ❌ Mix production and staging in same subnet
+### [-] DON'T:
+
+- [-] Share VLAN IPs across applications
+- [-] Expose internal services without NSGs
+- [-] Assume VLAN IPs are permanently static (recreate = new IP)
+- [-] Forget to document backend configurations
+- [-] Mix production and staging in same subnet
 
 ---
 
@@ -727,9 +729,9 @@ itlc resource get --resource-type loadBalancers --resource-name myresource --clu
 - `itlc realm --help`
 
 **Network Documentation:**
-- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP.md) — Infrastructure details
-- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE.md) — How everything works
-- [../TROUBLESHOOTING.md](../TROUBLESHOOTING.md) — Debug common issues
+- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP.md)  Infrastructure details
+- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE.md)  How everything works
+- [../TROUBLESHOOTING.md](../TROUBLESHOOTING.md)  Debug common issues
 
 **Get Support:**
 - Email: dev@itlusions.com

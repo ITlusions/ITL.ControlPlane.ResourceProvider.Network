@@ -7,40 +7,40 @@ Complete walkthrough for configuring BGP peering and VLAN-based load balancer IP
 ## Architecture Overview
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│ Your Physical Network                                      │
-│                                                             │
-│  Core Router (10.1.1.1)                                    │
-│  ├─ VLAN 100 (Storage): 10.200.0.0/24                     │
-│  ├─ VLAN 200 (Data):    10.201.0.0/24                     │
-│  └─ VLAN 300 (Compute): 10.202.0.0/24                     │
-│                                                             │
-└────────────────────────────────────────────────────────────┘
-        │ BGP peering (AS 65000/65001/65002)
-        │
-    ┌───┼───────────────┬───────────────┐
-    │   │               │               │
-    ↓   ↓               ↓               ↓
-┌─────────────┐  ┌──────────────┐  ┌──────────────┐
-│ Storage     │  │ Data         │  │ Compute      │
-│ Cluster     │  │ Cluster      │  │ Cluster      │
-│ AS: 65000   │  │ AS: 65001    │  │ AS: 65002    │
-│ VLAN 100    │  │ VLAN 200     │  │ VLAN 300     │
-│ 10.200.0.0/ │  │ 10.201.0.0/  │  │ 10.202.0.0/  │
-│ 25          │  │ 25           │  │ 25           │
-└─────────────┘  └──────────────┘  └──────────────┘
+
+ Your Physical Network                                      
+                                                             
+  Core Router (10.1.1.1)                                    
+   VLAN 100 (Storage): 10.200.0.0/24                     
+   VLAN 200 (Data):    10.201.0.0/24                     
+   VLAN 300 (Compute): 10.202.0.0/24                     
+                                                             
+
+         BGP peering (AS 65000/65001/65002)
+        
+    
+                                     
+                                     
+    
+ Storage        Data            Compute      
+ Cluster        Cluster         Cluster      
+ AS: 65000      AS: 65001       AS: 65002    
+ VLAN 100       VLAN 200        VLAN 300     
+ 10.200.0.0/    10.201.0.0/     10.202.0.0/  
+ 25             25              25           
+    
 ```
 
 ---
 
 ## Prerequisites
 
-- ✅ 3 Kubernetes clusters (Talos HardenedOS preferred)
-- ✅ Cilium v1.14+ installed on all clusters
-- ✅ Router with BGP support (Cisco, Juniper, Arista, etc.)
-- ✅ Network connectivity between clusters and router
-- ✅ kubectl access to all clusters
-- ✅ Understanding of BGP basics
+- [x] 3 Kubernetes clusters (Talos HardenedOS preferred)
+- [x] Cilium v1.14+ installed on all clusters
+- [x] Router with BGP support (Cisco, Juniper, Arista, etc.)
+- [x] Network connectivity between clusters and router
+- [x] kubectl access to all clusters
+- [x] Understanding of BGP basics
 
 ---
 
@@ -137,8 +137,8 @@ spec:
 
 ## Next Steps
 
-- **Ready to deploy?** → [Installation](INSTALLATION.md)
-- **Security?** → [Security Best Practices](SECURITY.md)
+- **Ready to deploy?**  [Installation](INSTALLATION.md)
+- **Security?**  [Security Best Practices](SECURITY.md)
 
 ---
 

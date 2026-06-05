@@ -7,11 +7,11 @@ What is the Network Provider and why you need it?
 ## The Problem
 
 Running Azure-style networking on Kubernetes is complex:
-- **IP Management** — How do you allocate IPs across clusters?
-- **Multi-Tenancy** — How do you isolate subscriptions safely?
-- **Overlapping CIDRs** — What if two customers need 10.0.0.0/16?
-- **External Access** — How do you expose services to your physical network?
-- **Policy Enforcement** — How do you implement NSGs in Kubernetes?
+- **IP Management**  How do you allocate IPs across clusters?
+- **Multi-Tenancy**  How do you isolate subscriptions safely?
+- **Overlapping CIDRs**  What if two customers need 10.0.0.0/16?
+- **External Access**  How do you expose services to your physical network?
+- **Policy Enforcement**  How do you implement NSGs in Kubernetes?
 
 Traditional solutions (Helm charts, raw manifests) require deep Kubernetes expertise.
 
@@ -23,15 +23,15 @@ The **ITL Network Provider** is a FastAPI microservice that translates **Azure R
 
 ```
 You (REST API)
-    ↓
+    
 "Create VNet 10.0.0.0/16"
-    ↓
+    
 Network Provider
-    ├─ Parses ARM-style request
-    ├─ Validates CIDR against subscription
-    ├─ Generates Cilium resources
-    └─ Deploys to all 3 clusters
-    ↓
+     Parses ARM-style request
+     Validates CIDR against subscription
+     Generates Cilium resources
+     Deploys to all 3 clusters
+    
 Result: VNet ready to use, IP isolation guaranteed
 ```
 
@@ -41,7 +41,7 @@ Result: VNet ready to use, IP isolation guaranteed
 
 ### 1. **Azure-Compatible API**
 
-Use familiar Azure patterns — VNets, Subnets, NSGs, Load Balancers:
+Use familiar Azure patterns  VNets, Subnets, NSGs, Load Balancers:
 
 ```bash
 # Create a VNet (Azure-style)
@@ -53,12 +53,12 @@ curl -X POST /subscriptions/sub-001/resourceGroups/rg1/providers/Microsoft.Netwo
 
 ### 2. **Multi-Tenant Isolation**
 
-Each subscription gets its own namespace → complete isolation:
+Each subscription gets its own namespace  complete isolation:
 
 ```
-Subscription A (sub-001) → Namespace: sub-001 → 10.0.0.0/16
-Subscription B (sub-002) → Namespace: sub-002 → 10.0.0.0/16 (same CIDR, no conflict!)
-Subscription C (sub-003) → Namespace: sub-003 → 10.0.0.0/16 (still no conflict!)
+Subscription A (sub-001)  Namespace: sub-001  10.0.0.0/16
+Subscription B (sub-002)  Namespace: sub-002  10.0.0.0/16 (same CIDR, no conflict!)
+Subscription C (sub-003)  Namespace: sub-003  10.0.0.0/16 (still no conflict!)
 
 Why no conflict? Kubernetes namespaces provide complete network isolation.
 ```
@@ -70,11 +70,11 @@ Services automatically get routable IPs from your physical network:
 ```
 Your Network (VLAN 100)        Kubernetes (Cilium)
 10.200.0.0/24                 10.0.0.0/16 (internal)
-├─ Router (10.200.0.1)        └─ Pods running...
-├─ LoadBalancer → 10.200.0.50 ←─ Gets external IP via BGP!
-└─ API → 10.200.0.51          ←─ Direct routing, no load, no NAT!
+ Router (10.200.0.1)         Pods running...
+ LoadBalancer  10.200.0.50  Gets external IP via BGP!
+ API  10.200.0.51           Direct routing, no load, no NAT!
 
-Access from network: curl http://10.200.0.50 ✓ Direct access!
+Access from network: curl http://10.200.0.50  Direct access!
 ```
 
 ### 4. **Multi-Cluster Deployment**
@@ -82,11 +82,11 @@ Access from network: curl http://10.200.0.50 ✓ Direct access!
 Deploy to 3 clusters simultaneously with automatic failover:
 
 ```
-Storage Cluster ──┐
-                  ├─ Same VNet deployed
-Data Cluster ─────┤─ Pod-to-pod works across clusters (ClusterMesh)
-                  │─ Cluster down? Traffic redirects automatically
-Compute Cluster ──┘
+Storage Cluster 
+                   Same VNet deployed
+Data Cluster  Pod-to-pod works across clusters (ClusterMesh)
+                   Cluster down? Traffic redirects automatically
+Compute Cluster 
 ```
 
 ### 5. **Security & Policies**
@@ -95,9 +95,9 @@ Network Security Groups (NSGs) translate to Cilium policies:
 
 ```
 NSG Rule: Allow HTTP from 10.0.0.0/24
-    ↓
+    
 Cilium Policy: Ingress from 10.0.0.0/24 on port 80
-    ↓
+    
 Result: Only pods in that CIDR can access your service
 ```
 
@@ -112,42 +112,42 @@ Result: Only pods in that CIDR can access your service
    POST /subscriptions/{sub}/resourceGroups/{rg}/providers/...virtualNetworks/{vnet}
 
 2. Network Provider validates:
-   ✓ Subscription exists
-   ✓ CIDR not used in this subscription
-   ✓ User has permissions
+    Subscription exists
+    CIDR not used in this subscription
+    User has permissions
 
 3. Generate Cilium manifests:
-   ├─ CiliumLoadBalancerIPPool (for IP allocation)
-   ├─ Namespace (for isolation)
-   └─ Labels (for multi-cluster discovery)
+    CiliumLoadBalancerIPPool (for IP allocation)
+    Namespace (for isolation)
+    Labels (for multi-cluster discovery)
 
 4. Deploy to 3 clusters (parallel):
-   ├─ Create/patch storage cluster
-   ├─ Create/patch data cluster
-   └─ Create/patch compute cluster
+    Create/patch storage cluster
+    Create/patch data cluster
+    Create/patch compute cluster
 
 5. Database record created:
-   └─ Track resource metadata, audit log
+    Track resource metadata, audit log
 
 6. Response to client:
-   └─ HTTP 201 + VNet resource object
+    HTTP 201 + VNet resource object
 ```
 
 ### Behind the Scenes
 
 ```
 Network Provider
-├─ FastAPI handlers (ARM-style routes)
-├─ Cilium abstraction layer
-│  ├─ Creates CiliumLoadBalancerIPPools
-│  ├─ Manages CiliumNetworkPolicies
-│  └─ Handles CiliumBGPPeeringPolicies
-├─ Kubernetes client (async)
-│  └─ Connects to 3 clusters simultaneously
-├─ PostgreSQL (async SQLAlchemy)
-│  └─ Stores metadata & audit logs
-└─ Health checks
-   └─ Monitors all 3 cluster connections
+ FastAPI handlers (ARM-style routes)
+ Cilium abstraction layer
+   Creates CiliumLoadBalancerIPPools
+   Manages CiliumNetworkPolicies
+   Handles CiliumBGPPeeringPolicies
+ Kubernetes client (async)
+   Connects to 3 clusters simultaneously
+ PostgreSQL (async SQLAlchemy)
+   Stores metadata & audit logs
+ Health checks
+    Monitors all 3 cluster connections
 ```
 
 ---
@@ -159,9 +159,9 @@ Network Provider
 Multiple customers, each with their own subscription:
 
 ```
-Customer A (sub-aaa) → Namespace sub-aaa → VNet 10.0.0.0/16 → VLAN IP 10.200.0.50
-Customer B (sub-bbb) → Namespace sub-bbb → VNet 10.0.0.0/16 → VLAN IP 10.200.0.51
-Customer C (sub-ccc) → Namespace sub-ccc → VNet 10.1.0.0/16 → VLAN IP 10.200.0.52
+Customer A (sub-aaa)  Namespace sub-aaa  VNet 10.0.0.0/16  VLAN IP 10.200.0.50
+Customer B (sub-bbb)  Namespace sub-bbb  VNet 10.0.0.0/16  VLAN IP 10.200.0.51
+Customer C (sub-ccc)  Namespace sub-ccc  VNet 10.1.0.0/16  VLAN IP 10.200.0.52
 
 All running on same clusters, completely isolated!
 ```
@@ -172,7 +172,7 @@ Migrate existing Azure workloads to Kubernetes:
 
 ```
 Cloud Migration Path:
-  1. Deploy Network Provider → Familiar Azure API
+  1. Deploy Network Provider  Familiar Azure API
   2. Developers use same ARM templates/tools
   3. Services work identically to Azure
   4. Same firewall rules (NSGs)
@@ -186,11 +186,11 @@ No rewrite needed! Drop-in replacement!
 Distribute workloads across clusters with automatic failover:
 
 ```
-Region A (Storage Cluster) ┐
-                           ├─ Same VNet, same policies
-Region B (Data Cluster)    ├─ Pod-to-pod works across clusters
-                           │─ Single point of failure? None!
-Region C (Compute) ────────┘
+Region A (Storage Cluster) 
+                            Same VNet, same policies
+Region B (Data Cluster)     Pod-to-pod works across clusters
+                            Single point of failure? None!
+Region C (Compute) 
 ```
 
 ---
@@ -213,20 +213,20 @@ Region C (Compute) ────────┘
 
 | Feature | Network Provider | K8s Ingress |
 |---|---|---|
-| Multi-tenant isolation | ✅ Namespace-level | ⚠️ Requires additional policies |
-| Overlapping CIDRs | ✅ Safe in different namespaces | ❌ Conflicts within cluster |
-| External IP via BGP | ✅ Automatic | ❌ Requires external controller |
-| NSGs / Network policies | ✅ Built-in | ⚠️ Manual CiliumNetworkPolicy |
-| Azure compatibility | ✅ Exact API match | ❌ Not Azure-compatible |
+| Multi-tenant isolation | [x] Namespace-level | [-] Requires additional policies |
+| Overlapping CIDRs | [x] Safe in different namespaces | [-] Conflicts within cluster |
+| External IP via BGP | [x] Automatic | [-] Requires external controller |
+| NSGs / Network policies | [x] Built-in | [-] Manual CiliumNetworkPolicy |
+| Azure compatibility | [x] Exact API match | [-] Not Azure-compatible |
 
 ### vs. Azure itself
 
 | Feature | Network Provider | Azure |
 |---|---|---|
-| Cost | ✅ Run on-prem or any cloud | ❌ Azure billing |
-| Portability | ✅ Works on any K8s | ❌ Azure-only |
-| Multi-cluster | ✅ Across datacenters | ⚠️ Single region |
-| Familiar API | ✅ 100% Azure ARM | ✅ Same as Azure |
+| Cost | [x] Run on-prem or any cloud | [-] Azure billing |
+| Portability | [x] Works on any K8s | [-] Azure-only |
+| Multi-cluster | [x] Across datacenters | [-] Single region |
+| Familiar API | [x] 100% Azure ARM | [x] Same as Azure |
 
 ---
 
@@ -281,10 +281,10 @@ kubectl scale deployment web --replicas=5
 
 ## Next Steps
 
-- **Want to understand the design?** → [Architecture](ARCHITECTURE.md)
-- **Ready to try it?** → [Quickstart](../tutorials/01-QUICKSTART.md)
-- **Need specific how-tos?** → [For Kubernetes Users](../guides/FOR_K8S_DEVELOPERS.md) or [For API Users](../guides/FOR_ITL_API_USERS.md)
-- **Setting up production?** → [Production Deployment](../setup/PRODUCTION_DEPLOYMENT.md)
+- **Want to understand the design?**  [Architecture](ARCHITECTURE.md)
+- **Ready to try it?**  [Quickstart](../tutorials/01-QUICKSTART.md)
+- **Need specific how-tos?**  [For Kubernetes Users](../guides/FOR_K8S_DEVELOPERS.md) or [For API Users](../guides/FOR_ITL_API_USERS.md)
+- **Setting up production?**  [Production Deployment](../setup/PRODUCTION_DEPLOYMENT.md)
 
 ---
 

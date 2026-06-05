@@ -48,7 +48,7 @@ curl -X POST http://localhost:8002/subscriptions/sub-customer-001/quota \
   }'
 
 # 4. Notify customer
-# → They can now create VNets via REST API
+#  They can now create VNets via REST API
 ```
 
 #### Monitoring Resource Usage
@@ -241,33 +241,33 @@ groups:
 ### Dashboard Example (Grafana)
 
 ```
-┌──────────────────────────────────────────────┐
-│ Network Provider Status                      │
-├──────────────────────────────────────────────┤
-│ Status: ✅ Healthy                            │
-│ Clusters: 3/3 connected                      │
-│ Database: Connected (pool: 15/20)            │
-├──────────────────────────────────────────────┤
-│                                              │
-│ Requests (last hour)                         │
-│ ├─ Total: 12,345                             │
-│ ├─ Success: 12,210 (99.1%)                   │
-│ └─ Errors: 135 (1.1%)                        │
-│                                              │
-│ Resource Counts                              │
-│ ├─ VNets: 234                                │
-│ ├─ Subnets: 456                              │
-│ ├─ NSGs: 189                                 │
-│ └─ Load Balancers: 67                        │
-│                                              │
-│ IP Pool Utilization                          │
-│ ├─ Storage: 125/128 (97.7%)  [!]             │
-│ ├─ Data: 98/128 (76.6%)                      │
-│ └─ Compute: 102/128 (79.7%)                  │
-│                                              │
-│ API Latency (p95)                            │
-│ └─ 245ms                                     │
-└──────────────────────────────────────────────┘
+
+ Network Provider Status                      
+
+ Status: [x] Healthy                            
+ Clusters: 3/3 connected                      
+ Database: Connected (pool: 15/20)            
+
+                                              
+ Requests (last hour)                         
+  Total: 12,345                             
+  Success: 12,210 (99.1%)                   
+  Errors: 135 (1.1%)                        
+                                              
+ Resource Counts                              
+  VNets: 234                                
+  Subnets: 456                              
+  NSGs: 189                                 
+  Load Balancers: 67                        
+                                              
+ IP Pool Utilization                          
+  Storage: 125/128 (97.7%)  [!]             
+  Data: 98/128 (76.6%)                      
+  Compute: 102/128 (79.7%)                  
+                                              
+ API Latency (p95)                            
+  245ms                                     
+
 ```
 
 ---
@@ -305,14 +305,14 @@ kubectl rollout restart deployment/network-provider -n itl-network
 
 ```
 RTO (Recovery Time Objective): 15 minutes
-├─ Database restore: 5 minutes
-├─ Network Provider restart: 2 minutes
-└─ Cluster re-sync: 8 minutes
+ Database restore: 5 minutes
+ Network Provider restart: 2 minutes
+ Cluster re-sync: 8 minutes
 
 RPO (Recovery Point Objective): 1 hour
-├─ Hourly backups
-├─ Point-in-time recovery supported
-└─ Transaction logs retained for 7 days
+ Hourly backups
+ Point-in-time recovery supported
+ Transaction logs retained for 7 days
 ```
 
 ---
@@ -328,10 +328,10 @@ Month 6: 400 subscriptions, 4,000 resources
 Month 12: 1,000 subscriptions, 10,000 resources
 
 Scaling needs:
-├─ Database: Upgrade to 8-core, 32GB RAM at month 6
-├─ Network Provider: Scale to 5 replicas at month 3
-├─ IP Pools: Add new VLANs at month 6
-└─ Cluster nodes: Add 50% capacity at month 3, 100% at month 6
+ Database: Upgrade to 8-core, 32GB RAM at month 6
+ Network Provider: Scale to 5 replicas at month 3
+ IP Pools: Add new VLANs at month 6
+ Cluster nodes: Add 50% capacity at month 3, 100% at month 6
 ```
 
 ### Proactive Upgrades
@@ -345,9 +345,9 @@ GROUP BY DATE(created_at)
 ORDER BY date;
 
 # If trend shows 20% growth per month:
-# → Schedule capacity increase 2 months ahead
-# → Test scaling in staging
-# → Coordinate with team for maintenance window
+#  Schedule capacity increase 2 months ahead
+#  Test scaling in staging
+#  Coordinate with team for maintenance window
 ```
 
 ---
@@ -402,20 +402,20 @@ kubectl rollout status deployment/network-provider -n itl-network -w
 
 ```
 Level 1: Automated Monitoring & Alerts
-├─ Healthy? → No action
-└─ Unhealthy? → Page on-call engineer
+ Healthy?  No action
+ Unhealthy?  Page on-call engineer
 
 Level 2: On-Call Engineer (1-hour response target)
-├─ Check health dashboard
-├─ Review logs
-├─ Restart if needed
-└─ If unresolved → Page engineering lead
+ Check health dashboard
+ Review logs
+ Restart if needed
+ If unresolved  Page engineering lead
 
 Level 3: Engineering Lead (15-minute response target)
-├─ Assess impact
-├─ Decide on rollback vs. fix
-├─ Engage development team
-└─ If still critical → Page CTO
+ Assess impact
+ Decide on rollback vs. fix
+ Engage development team
+ If still critical  Page CTO
 ```
 
 ### Runbook Example
@@ -433,48 +433,48 @@ Level 3: Engineering Lead (15-minute response target)
    kubectl logs deployment/network-provider -n itl-network --tail=100
 
 4. Common causes:
-   ├─ Database issue → Check connectivity
-   ├─ Cluster unreachable → Test cluster connections
-   ├─ Resource quota exceeded → Check database size
-   └─ Code bug → Rollback to previous version
+    Database issue  Check connectivity
+    Cluster unreachable  Test cluster connections
+    Resource quota exceeded  Check database size
+    Code bug  Rollback to previous version
 
 5. Recovery steps:
-   ├─ Restart pods (if temporary glitch)
-   ├─ Failover to backup cluster
-   ├─ Rollback deployment
-   └─ Engage engineering team
+    Restart pods (if temporary glitch)
+    Failover to backup cluster
+    Rollback deployment
+    Engage engineering team
 ```
 
 ---
 
 ## Best Practices
 
-### ✅ DO:
+### [x] DO:
 
-- ✅ Monitor health dashboard daily
-- ✅ Schedule backups (hourly or more frequently)
-- ✅ Test disaster recovery annually
-- ✅ Plan capacity 2-3 months ahead
-- ✅ Use GitOps for all deployments
-- ✅ Document incident responses
-- ✅ Share knowledge via runbooks
+- [x] Monitor health dashboard daily
+- [x] Schedule backups (hourly or more frequently)
+- [x] Test disaster recovery annually
+- [x] Plan capacity 2-3 months ahead
+- [x] Use GitOps for all deployments
+- [x] Document incident responses
+- [x] Share knowledge via runbooks
 
-### ❌ DON'T:
+### [-] DON'T:
 
-- ❌ Make manual changes to production (always use Git)
-- ❌ Skip monitoring or alerting
-- ❌ Delete old backups (keep 1+ year)
-- ❌ Deploy without testing in staging
-- ❌ Ignore warning-level alerts
-- ❌ Keep outdated documentation
+- [-] Make manual changes to production (always use Git)
+- [-] Skip monitoring or alerting
+- [-] Delete old backups (keep 1+ year)
+- [-] Deploy without testing in staging
+- [-] Ignore warning-level alerts
+- [-] Keep outdated documentation
 
 ---
 
 ## Next Steps
 
-- **Security hardening?** → [Security & Best Practices](SECURITY.md)
-- **Monitoring setup?** → [Monitoring Guide](../tasks/MONITORING.md)
-- **Performance tuning?** → [Troubleshooting](../reference/TROUBLESHOOTING.md)
+- **Security hardening?**  [Security & Best Practices](SECURITY.md)
+- **Monitoring setup?**  [Monitoring Guide](../tasks/MONITORING.md)
+- **Performance tuning?**  [Troubleshooting](../reference/TROUBLESHOOTING.md)
 
 ---
 

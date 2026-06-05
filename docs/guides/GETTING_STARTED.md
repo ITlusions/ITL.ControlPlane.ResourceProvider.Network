@@ -224,7 +224,7 @@ curl -X POST http://localhost:8002/api/resource \
   }'
 ```
 
-**Subscription B (sub-00000002) — Same CIDR!**
+**Subscription B (sub-00000002)  Same CIDR!**
 ```bash
 curl -X POST http://localhost:8002/api/resource \
   -H "Authorization: Bearer $TOKEN_SUB_B" \
@@ -240,9 +240,9 @@ curl -X POST http://localhost:8002/api/resource \
   }'
 ```
 
-✅ **Both VNets created successfully!** They're isolated in separate Kubernetes namespaces:
-- Subscription A → `sub-aaaaaaaa`
-- Subscription B → `sub-bbbbbbbb`
+[x] **Both VNets created successfully!** They're isolated in separate Kubernetes namespaces:
+- Subscription A  `sub-aaaaaaaa`
+- Subscription B  `sub-bbbbbbbb`
 
 ---
 
@@ -379,7 +379,7 @@ export COMPUTE_KUBECONFIG=/path/to/compute-kubeconfig.yaml
 kubectl --kubeconfig=$COMPUTE_KUBECONFIG get ciliumloadbalancerippools -n kube-system | grep pool-
 ```
 
-✅ **VNet should appear in all three clusters!**
+[x] **VNet should appear in all three clusters!**
 
 ### 2. Test Pod Connectivity Across Clusters
 

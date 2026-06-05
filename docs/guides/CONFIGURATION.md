@@ -72,9 +72,9 @@ The provider deploys resources to **all three clusters simultaneously**:
 3. **Compute Cluster**: Stateless compute resources
 
 This multi-cluster deployment ensures:
-- ✅ High availability across availability zones
-- ✅ Automatic failover if one cluster is down
-- ✅ Distributed load across clusters
+- [x] High availability across availability zones
+- [x] Automatic failover if one cluster is down
+- [x] Distributed load across clusters
 
 ### Cluster Configuration Example
 

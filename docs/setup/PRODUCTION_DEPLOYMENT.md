@@ -10,35 +10,35 @@ Deploying Network Provider to production with high availability, monitoring, and
 
 ```
 Kubernetes:
-  ☐ 3 Kubernetes clusters (Storage, Data, Compute) v1.28+
-  ☐ Cilium v1.15+ with ClusterMesh enabled
-  ☐ BGP enabled on clusters for external IP advertisement
-  ☐ All nodes labeled (bgp-node=true)
-  ☐ All nodes have sufficient resources (4 CPU, 8GB RAM minimum)
+   3 Kubernetes clusters (Storage, Data, Compute) v1.28+
+   Cilium v1.15+ with ClusterMesh enabled
+   BGP enabled on clusters for external IP advertisement
+   All nodes labeled (bgp-node=true)
+   All nodes have sufficient resources (4 CPU, 8GB RAM minimum)
 
 Storage:
-  ☐ PostgreSQL 14+ with replication enabled
-  ☐ Backups configured (daily automated)
-  ☐ Connection pooling (pgBouncer) on database
-  ☐ Read replicas for scaling queries
+   PostgreSQL 14+ with replication enabled
+   Backups configured (daily automated)
+   Connection pooling (pgBouncer) on database
+   Read replicas for scaling queries
 
 Networking:
-  ☐ VLAN(s) provisioned for external IPs
-  ☐ BGP peering configured with network devices
-  ☐ Firewall rules allow pod egress
-  ☐ Load balancers support BGP route announcement
+   VLAN(s) provisioned for external IPs
+   BGP peering configured with network devices
+   Firewall rules allow pod egress
+   Load balancers support BGP route announcement
 
 Security:
-  ☐ Keycloak/OIDC server configured
-  ☐ TLS certificates (let's Encrypt or CA)
-  ☐ Secret management (Vault/sealed-secrets)
-  ☐ Network policies templates ready
+   Keycloak/OIDC server configured
+   TLS certificates (let's Encrypt or CA)
+   Secret management (Vault/sealed-secrets)
+   Network policies templates ready
 
 Monitoring:
-  ☐ Prometheus installed in all clusters
-  ☐ Grafana for visualization
-  ☐ Alertmanager configured
-  ☐ Log aggregation (Loki/ELK)
+   Prometheus installed in all clusters
+   Grafana for visualization
+   Alertmanager configured
+   Log aggregation (Loki/ELK)
 ```
 
 ---
@@ -178,13 +178,13 @@ spec:
 
 ```
 Primary (Active)
-    ↓ Replication stream
+     Replication stream
 Standby 1 (Hot standby)
-    ↓ Replication stream
+     Replication stream
 Standby 2 (Hot standby)
 
 Automatic failover:
-  Primary goes down → Standby 1 promoted → Standby 2 connects to new primary
+  Primary goes down  Standby 1 promoted  Standby 2 connects to new primary
 ```
 
 **Configuration:**
@@ -575,29 +575,29 @@ SELECT * FROM resources WHERE id = 'bad-resource';
 
 ```
 Current Setup:
-├─ Network Provider: 3 replicas × 500m CPU = 1.5 CPU requested
-├─ Database: 4 cores, 32GB RAM
-├─ Total: ~6 CPU, 40GB RAM
+ Network Provider: 3 replicas  500m CPU = 1.5 CPU requested
+ Database: 4 cores, 32GB RAM
+ Total: ~6 CPU, 40GB RAM
 
 Optimizations:
-├─ Use spot instances for non-critical components (20% savings)
-├─ CPU request: 300m → 250m (use actual average + 20% buffer)
-├─ Memory: 512Mi → 256Mi (profiles show peak is 150Mi)
-└─ Estimated savings: 30% = $X,000/month
+ Use spot instances for non-critical components (20% savings)
+ CPU request: 300m  250m (use actual average + 20% buffer)
+ Memory: 512Mi  256Mi (profiles show peak is 150Mi)
+ Estimated savings: 30% = $X,000/month
 ```
 
 ### Scaling by Load
 
 ```
 Low traffic (night):
-├─ Network Provider: 1 replica
-├─ Database: Single instance
-└─ Cost: Minimum
+ Network Provider: 1 replica
+ Database: Single instance
+ Cost: Minimum
 
 High traffic (day):
-├─ Network Provider: 5 replicas
-├─ Database: Read replicas active
-└─ Cost: Peak
+ Network Provider: 5 replicas
+ Database: Read replicas active
+ Cost: Peak
 ```
 
 ---
@@ -608,43 +608,43 @@ High traffic (day):
 
 ```
 Performance:
-  ☐ API latency p95 < 200ms
-  ☐ Throughput > 1,000 req/s
-  ☐ Error rate < 0.1%
-  ☐ Zero data loss in 7-day test
+   API latency p95 < 200ms
+   Throughput > 1,000 req/s
+   Error rate < 0.1%
+   Zero data loss in 7-day test
 
 Reliability:
-  ☐ All clusters connected (3/3)
-  ☐ No pod crashes in 7 days
-  ☐ Database replication verified
-  ☐ Backup/restore tested
+   All clusters connected (3/3)
+   No pod crashes in 7 days
+   Database replication verified
+   Backup/restore tested
 
 Security:
-  ☐ All traffic encrypted (TLS)
-  ☐ OIDC authentication working
-  ☐ RBAC policies enforced
-  ☐ Audit logs recording all changes
+   All traffic encrypted (TLS)
+   OIDC authentication working
+   RBAC policies enforced
+   Audit logs recording all changes
 
 Operations:
-  ☐ Monitoring alerts functional
-  ☐ On-call runbooks written
-  ☐ Team trained on procedures
-  ☐ Rollback procedure tested
+   Monitoring alerts functional
+   On-call runbooks written
+   Team trained on procedures
+   Rollback procedure tested
 
 Compliance:
-  ☐ Security audit completed
-  ☐ Penetration test passed
-  ☐ Data residency verified
-  ☐ Compliance certifications met
+   Security audit completed
+   Penetration test passed
+   Data residency verified
+   Compliance certifications met
 ```
 
 ---
 
 ## Next Steps
 
-- **Operations guide?** → [For Operators](../guides/FOR_OPERATORS.md)
-- **Security setup?** → [Security & Best Practices](SECURITY.md)
-- **Architecture details?** → [Architecture](../concepts/ARCHITECTURE.md)
+- **Operations guide?**  [For Operators](../guides/FOR_OPERATORS.md)
+- **Security setup?**  [Security & Best Practices](SECURITY.md)
+- **Architecture details?**  [Architecture](../concepts/ARCHITECTURE.md)
 
 ---
 

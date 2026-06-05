@@ -7,10 +7,10 @@ How Network Provider isolates multiple subscriptions while supporting overlappin
 ## Core Principle: Namespace Isolation
 
 Each subscription gets its own Kubernetes namespace. This provides:
-- **Network isolation** — Pods can't communicate across namespaces without explicit policies
-- **Policy enforcement** — NSGs apply only within the subscription
-- **IP overlap safety** — Different subscriptions can use the same CIDR blocks
-- **Multi-tenancy** — Complete separation of customer workloads
+- **Network isolation**  Pods can't communicate across namespaces without explicit policies
+- **Policy enforcement**  NSGs apply only within the subscription
+- **IP overlap safety**  Different subscriptions can use the same CIDR blocks
+- **Multi-tenancy**  Complete separation of customer workloads
 
 ---
 
@@ -22,9 +22,9 @@ A **tenant** is the top-level organization (Keycloak realm). Example:
 
 ```
 Keycloak Realm: "itlusions.com"
-  ├─ User: alice@itlusions.com (Roles: tenant-admin)
-  ├─ User: bob@itlusions.com   (Roles: subscription-admin)
-  └─ User: charlie@itlusions.com (Roles: network-viewer)
+   User: alice@itlusions.com (Roles: tenant-admin)
+   User: bob@itlusions.com   (Roles: subscription-admin)
+   User: charlie@itlusions.com (Roles: network-viewer)
 ```
 
 ### Subscription = Billing Container
@@ -33,19 +33,19 @@ A **subscription** is a billing/resource container within a tenant. Example:
 
 ```
 Tenant: itlusions.com
-├─ Subscription: sub-00000001 (Production)
-│  ├─ Owner: alice@itlusions.com
-│  ├─ Team: Platform engineers
-│  └─ Resources: prod-vnet, prod-nsg, prod-lb
-│
-├─ Subscription: sub-00000002 (Staging)
-│  ├─ Owner: bob@itlusions.com
-│  ├─ Team: Dev team
-│  └─ Resources: staging-vnet
-│
-└─ Subscription: sub-00000003 (Shared Services)
-   ├─ Owner: alice@itlusions.com
-   └─ Resources: shared-registry, shared-logging
+ Subscription: sub-00000001 (Production)
+   Owner: alice@itlusions.com
+   Team: Platform engineers
+   Resources: prod-vnet, prod-nsg, prod-lb
+
+ Subscription: sub-00000002 (Staging)
+   Owner: bob@itlusions.com
+   Team: Dev team
+   Resources: staging-vnet
+
+ Subscription: sub-00000003 (Shared Services)
+    Owner: alice@itlusions.com
+    Resources: shared-registry, shared-logging
 ```
 
 ### Namespace Mapping
@@ -54,8 +54,8 @@ When you create a resource in a subscription, Network Provider:
 
 1. **Maps subscription ID to namespace:**
    ```
-   sub-00000001          → Namespace: sub-00000001
-   sub-ffffffff-...      → Namespace: sub-ffffffff (first 8 chars)
+   sub-00000001           Namespace: sub-00000001
+   sub-ffffffff-...       Namespace: sub-ffffffff (first 8 chars)
    ```
 
 2. **Creates namespace if needed:**
@@ -79,26 +79,26 @@ When you create a resource in a subscription, Network Provider:
 
 ```
 Subscription A wants: VNet 10.0.0.0/16
-Subscription B wants: VNet 10.0.0.0/16  ← CONFLICT!
+Subscription B wants: VNet 10.0.0.0/16   CONFLICT!
 
 Traditional approach: Must use different CIDR per subscription
   Sub A: 10.0.0.0/16
   Sub B: 10.1.0.0/16
   Sub C: 10.2.0.0/16
   ...
-  → CIDR exhaustion!
+   CIDR exhaustion!
 ```
 
 ### The Solution (Network Provider)
 
 ```
-Subscription A → Namespace sub-a
-  ├─ VNet: 10.0.0.0/16
-  └─ Pods: 10.0.1.0 - 10.0.254.0
+Subscription A  Namespace sub-a
+   VNet: 10.0.0.0/16
+   Pods: 10.0.1.0 - 10.0.254.0
 
-Subscription B → Namespace sub-b
-  ├─ VNet: 10.0.0.0/16 (same CIDR!)
-  └─ Pods: 10.0.1.0 - 10.0.254.0 (same range!)
+Subscription B  Namespace sub-b
+   VNet: 10.0.0.0/16 (same CIDR!)
+   Pods: 10.0.1.0 - 10.0.254.0 (same range!)
 
 NO CONFLICT because they're in separate namespaces!
 ```
@@ -109,16 +109,16 @@ Kubernetes handles IP allocation per namespace:
 
 ```
 Storage Cluster (CIDR: 10.0.0.0/16)
-├─ Namespace: sub-a
-│  ├─ Pod: 10.0.1.5 (only visible in this namespace)
-│  └─ Pod: 10.0.1.6
-│
-├─ Namespace: sub-b
-│  ├─ Pod: 10.0.1.5 (same IP, different namespace - no conflict!)
-│  └─ Pod: 10.0.1.6 (same IP, different namespace - no conflict!)
-│
-└─ Namespace: kube-system
-   └─ Pod: 10.0.254.1 (system pods)
+ Namespace: sub-a
+   Pod: 10.0.1.5 (only visible in this namespace)
+   Pod: 10.0.1.6
+
+ Namespace: sub-b
+   Pod: 10.0.1.5 (same IP, different namespace - no conflict!)
+   Pod: 10.0.1.6 (same IP, different namespace - no conflict!)
+
+ Namespace: kube-system
+    Pod: 10.0.254.1 (system pods)
 ```
 
 DNS automatically scopes to namespaces:
@@ -193,7 +193,7 @@ kubectl run app-pod -n sub-a --image=alpine -- sleep 3600
 # Deploy db in sub-b
 kubectl run db-pod -n sub-b --image=alpine -- sleep 3600
 
-# Test from sub-a → sub-b
+# Test from sub-a  sub-b
 kubectl exec app-pod -n sub-a -- nslookup db-pod.sub-b.svc.cluster.local
 # Should resolve and get 10.1.1.x IP
 
@@ -328,21 +328,23 @@ itlc resource create --resource-type virtualNetworks ...
 
 ## Best Practices
 
-### ✅ DO:
+### Best Practices:
 
-- ✅ Use one subscription per customer or environment (prod, staging, dev)
-- ✅ Assign roles carefully — only grant needed permissions
-- ✅ Audit logs regularly — track who changed what
-- ✅ Use consistent CIDR planning — even though overlap is safe, document your scheme
-- ✅ Test peering policies before production deployment
+#### DO:
 
-### ❌ DON'T:
+- [x] Use one subscription per customer or environment (prod, staging, dev)
+- [x] Assign roles carefully  only grant needed permissions
+- [x] Audit logs regularly  track who changed what
+- [x] Use consistent CIDR planning  even though overlap is safe, document your scheme
+- [x] Test peering policies before production deployment
 
-- ❌ Share a subscription across unrelated teams
-- ❌ Assign global admin to everyone
-- ❌ Ignore audit logs
-- ❌ Create cross-subscription policies without business justification
-- ❌ Use overlapping CIDRs if you might need explicit routing later
+### [-] DON'T:
+
+- [-] Share a subscription across unrelated teams
+- [-] Assign global admin to everyone
+- [-] Ignore audit logs
+- [-] Create cross-subscription policies without business justification
+- [-] Use overlapping CIDRs if you might need explicit routing later
 
 ---
 
@@ -398,9 +400,9 @@ kubectl label namespace {subscription-id} subscription={subscription-id}
 
 ## Next Steps
 
-- **Creating your first VNet?** → [Create VNets](../tasks/CREATE_VNETS.md)
-- **Setting up peering?** → [Setup Peering](../tasks/SETUP_PEERING.md)
-- **Want API details?** → [API Reference](../reference/API_REFERENCE.md)
+- **Creating your first VNet?**  [Create VNets](../tasks/CREATE_VNETS.md)
+- **Setting up peering?**  [Setup Peering](../tasks/SETUP_PEERING.md)
+- **Want API details?**  [API Reference](../reference/API_REFERENCE.md)
 
 ---
 
