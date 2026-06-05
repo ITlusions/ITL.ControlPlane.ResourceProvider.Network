@@ -281,10 +281,10 @@ kubectl scale deployment web --replicas=5
 
 ## Next Steps
 
-- **Want to understand the design?**  [Architecture](ARCHITECTURE.md)
-- **Ready to try it?**  [Quickstart](../tutorials/01-QUICKSTART.md)
-- **Need specific how-tos?**  [For Kubernetes Users](../guides/FOR_K8S_DEVELOPERS.md) or [For API Users](../guides/FOR_ITL_API_USERS.md)
-- **Setting up production?**  [Production Deployment](../setup/PRODUCTION_DEPLOYMENT.md)
+- **Want to understand the design?**  [Architecture](ARCHITECTURE)
+- **Ready to try it?**  [Quickstart](../tutorials/01-QUICKSTART)
+- **Need specific how-tos?**  [For Kubernetes Users](../guides/FOR_K8S_DEVELOPERS) or [For API Users](../guides/FOR_ITL_API_USERS)
+- **Setting up production?**  [Production Deployment](../setup/PRODUCTION_DEPLOYMENT)
 
 ---
 

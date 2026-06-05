@@ -137,8 +137,8 @@ spec:
 
 ## Next Steps
 
-- **Ready to deploy?**  [Installation](INSTALLATION.md)
-- **Security?**  [Security Best Practices](SECURITY.md)
+- **Ready to deploy?**  [Installation](INSTALLATION)
+- **Security?**  [Security Best Practices](SECURITY)
 
 ---
 

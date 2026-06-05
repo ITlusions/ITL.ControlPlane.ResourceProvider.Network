@@ -472,9 +472,9 @@ Level 3: Engineering Lead (15-minute response target)
 
 ## Next Steps
 
-- **Security hardening?**  [Security & Best Practices](SECURITY.md)
-- **Monitoring setup?**  [Monitoring Guide](../tasks/MONITORING.md)
-- **Performance tuning?**  [Troubleshooting](../reference/TROUBLESHOOTING.md)
+- **Security hardening?**  [Security & Best Practices](SECURITY)
+- **Monitoring setup?**  [Monitoring Guide](../tasks/MONITORING)
+- **Performance tuning?**  [Troubleshooting](../reference/TROUBLESHOOTING)
 
 ---
 

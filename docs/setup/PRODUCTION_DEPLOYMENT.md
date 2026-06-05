@@ -642,9 +642,9 @@ Compliance:
 
 ## Next Steps
 
-- **Operations guide?**  [For Operators](../guides/FOR_OPERATORS.md)
-- **Security setup?**  [Security & Best Practices](SECURITY.md)
-- **Architecture details?**  [Architecture](../concepts/ARCHITECTURE.md)
+- **Operations guide?**  [For Operators](../guides/FOR_OPERATORS)
+- **Security setup?**  [Security & Best Practices](SECURITY)
+- **Architecture details?**  [Architecture](../concepts/ARCHITECTURE)
 
 ---
 

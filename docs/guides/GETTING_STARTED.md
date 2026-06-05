@@ -491,10 +491,10 @@ kubectl exec -it -n kube-system ds/cilium -- cilium clustermesh status
 
 ## Next Steps
 
-- Read [../technical/ARCHITECTURE.md](../technical/ARCHITECTURE.md) for design details
-- Review [../technical/API_REFERENCE.md](../technical/API_REFERENCE.md) for all endpoints
-- Explore [../operations/EXAMPLES.md](../operations/EXAMPLES.md) for advanced patterns
-- Check troubleshooting in [../guides/TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+- Read [../technical/ARCHITECTURE.md](../technical/ARCHITECTURE) for design details
+- Review [../technical/API_REFERENCE.md](../technical/API_REFERENCE) for all endpoints
+- Explore [../operations/EXAMPLES.md](../operations/EXAMPLES) for advanced patterns
+- Check troubleshooting in [../guides/TROUBLESHOOTING.md](TROUBLESHOOTING)
 
 ---
 

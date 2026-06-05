@@ -436,8 +436,8 @@ Solution:
 
 ## Next Steps
 
-- **Ready to deploy?**  [Installation](../setup/INSTALLATION.md)
-- **Need setup guidance?**  [Security & Best Practices](../setup/SECURITY.md)
+- **Ready to deploy?**  [Installation](../setup/INSTALLATION)
+- **Need setup guidance?**  [Security & Best Practices](../setup/SECURITY)
 - **Design examples?**  [Tutorials](../tutorials/)
 
 ---

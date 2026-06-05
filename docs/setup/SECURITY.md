@@ -465,9 +465,9 @@ Severity 3 (Medium):
 
 ## Next Steps
 
-- **Deploy securely?**  [Production Deployment](PRODUCTION_DEPLOYMENT.md)
-- **Monitor security?**  [Monitoring](../tasks/MONITORING.md)
-- **Incident response?**  [Troubleshooting](../reference/TROUBLESHOOTING.md)
+- **Deploy securely?**  [Production Deployment](PRODUCTION_DEPLOYMENT)
+- **Monitor security?**  [Monitoring](../tasks/MONITORING)
+- **Incident response?**  [Troubleshooting](../reference/TROUBLESHOOTING)
 
 ---
 

@@ -23,17 +23,17 @@ The ITL Network Resource Provider delivers Azure-style networking abstractions o
 
 Get the fundamentals before diving in.
 
-- [**Overview**](concepts/OVERVIEW.md)  What is Network Provider and why you need it
-- [**Architecture**](concepts/ARCHITECTURE.md)  System design, components, data flows
-- [**Multi-Tenancy Model**](concepts/MULTI_TENANCY.md)  Subscription isolation & namespace mapping
-- [**Multi-Cluster Design**](concepts/MULTI_CLUSTER.md)  3-cluster resilience and failover
-- [**Network Isolation**](concepts/NETWORK_ISOLATION.md)  Cilium policies and security
+- [**Overview**](concepts/OVERVIEW)  What is Network Provider and why you need it
+- [**Architecture**](concepts/ARCHITECTURE)  System design, components, data flows
+- [**Multi-Tenancy Model**](concepts/MULTI_TENANCY)  Subscription isolation & namespace mapping
+- [**Multi-Cluster Design**](concepts/MULTI_CLUSTER)  3-cluster resilience and failover
+- [**Network Isolation**](concepts/NETWORK_ISOLATION)  Cilium policies and security
 
 ###  **See examples first**
 
 Real workflows showing how end-users deploy infrastructure.
 
-- [**End-User Examples**](tutorials/00-USER_EXAMPLES.md)  Portal, CLI, Terraform, Bicep examples
+- [**End-User Examples**](tutorials/00-USER_EXAMPLES)  Portal, CLI, Terraform, Bicep examples
   - Deploy a VNet with subnets via portal (5 min)
   - Deploy via CLI (itlc commands)
   - Deploy via Terraform (GitOps-ready)
@@ -43,42 +43,42 @@ Real workflows showing how end-users deploy infrastructure.
 
 Hands-on tutorials to learn by doing.
 
-- [**10-Minute Quickstart**](tutorials/01-QUICKSTART.md)  Local setup with docker-compose
-- [**Multi-Tier App**](tutorials/02-MULTI_TIER_APP.md)  Real-world production setup
-- [**Multi-Subscription**](tutorials/03-MULTI_SUBSCRIPTION.md)  Cross-subscription peering
-- [**VLAN Exposure**](tutorials/04-VLAN_EXPOSURE.md)  BGP and external access
+- [**10-Minute Quickstart**](tutorials/01-QUICKSTART)  Local setup with docker-compose
+- [**Multi-Tier App**](tutorials/02-MULTI_TIER_APP)  Real-world production setup
+- [**Multi-Subscription**](tutorials/03-MULTI_SUBSCRIPTION)  Cross-subscription peering
+- [**VLAN Exposure**](tutorials/04-VLAN_EXPOSURE)  BGP and external access
 
 ###  **Deploy & operate**
 
 Installation and operational procedures.
 
-- [**Installation**](setup/INSTALLATION.md)  Initial setup & prerequisites
-- [**Configuration**](setup/CONFIGURATION.md)  Environment variables & multi-cluster
-- [**BGP + VLAN Setup**](setup/BGP_VLAN_SETUP.md)  Router configuration & peering
-- [**Production Deployment**](setup/PRODUCTION_DEPLOYMENT.md)  High availability
-- [**Security Best Practices**](setup/SECURITY.md)  Hardening & compliance
+- [**Installation**](setup/INSTALLATION)  Initial setup & prerequisites
+- [**Configuration**](setup/CONFIGURATION)  Environment variables & multi-cluster
+- [**BGP + VLAN Setup**](setup/BGP_VLAN_SETUP)  Router configuration & peering
+- [**Production Deployment**](setup/PRODUCTION_DEPLOYMENT)  High availability
+- [**Security Best Practices**](setup/SECURITY)  Hardening & compliance
 
 ###  **Learn specific how-to guides**
 
 Detailed instructions for specific tasks.
 
-- [**Create Virtual Networks**](tasks/CREATE_VNETS.md)  VNets and subnets
-- [**Set Up Peering**](tasks/SETUP_PEERING.md)  Connect subscriptions
-- [**Expose Services**](tasks/EXPOSE_WITH_LB.md)  LoadBalancers & Application Gateways
-- [**Private Link Setup**](tasks/SETUP_PRIVATE_LINK.md)  Cross-subscription private endpoints
-- [**Network Security Groups**](tasks/MANAGE_NSGS.md)  Create & manage NSGs
-- [**Monitor IP Allocation**](tasks/MONITOR_IPS.md)  IP discovery & IPAM
-- [**Scale Clusters**](tasks/SCALE_CLUSTERS.md)  Add nodes & manage capacity
+- [**Create Virtual Networks**](tasks/CREATE_VNETS)  VNets and subnets
+- [**Set Up Peering**](tasks/SETUP_PEERING)  Connect subscriptions
+- [**Expose Services**](tasks/EXPOSE_WITH_LB)  LoadBalancers & Application Gateways
+- [**Private Link Setup**](tasks/SETUP_PRIVATE_LINK)  Cross-subscription private endpoints
+- [**Network Security Groups**](tasks/MANAGE_NSGS)  Create & manage NSGs
+- [**Monitor IP Allocation**](tasks/MONITOR_IPS)  IP discovery & IPAM
+- [**Scale Clusters**](tasks/SCALE_CLUSTERS)  Add nodes & manage capacity
 
 ###  **Look up references**
 
 Quick lookups and technical specifications.
 
-- [**API Reference**](reference/API_REFERENCE.md)  All REST endpoints (ARM-style)
-- [**CLI Reference**](reference/CLI_REFERENCE.md)  itlc commands & examples
-- [**Glossary**](reference/GLOSSARY.md)  Key terms and definitions
-- [**Troubleshooting**](reference/TROUBLESHOOTING.md)  Common issues & solutions
-- [**IPAM Guide**](reference/IPAM_GUIDE.md)  IP address management
+- [**API Reference**](reference/API_REFERENCE)  All REST endpoints (ARM-style)
+- [**CLI Reference**](reference/CLI_REFERENCE)  itlc commands & examples
+- [**Glossary**](reference/GLOSSARY)  Key terms and definitions
+- [**Troubleshooting**](reference/TROUBLESHOOTING)  Common issues & solutions
+- [**IPAM Guide**](reference/IPAM_GUIDE)  IP address management
 
 ---
 
@@ -88,13 +88,13 @@ Quick lookups and technical specifications.
 
 You deploy Kubernetes workloads and expose them via LoadBalancer services.
 
- Start here: [**For Kubernetes Users**](guides/FOR_K8S_DEVELOPERS.md)
+ Start here: [**For Kubernetes Users**](guides/FOR_K8S_DEVELOPERS)
 
 **Quick path:**
-1. [Quickstart](tutorials/01-QUICKSTART.md)  10 minutes
-2. [For K8s Users](guides/FOR_K8S_DEVELOPERS.md)  Your guide
-3. [Expose Services](tasks/EXPOSE_WITH_LB.md)  Specific how-to
-4. [Troubleshooting](reference/TROUBLESHOOTING.md)  When stuck
+1. [Quickstart](tutorials/01-QUICKSTART)  10 minutes
+2. [For K8s Users](guides/FOR_K8S_DEVELOPERS)  Your guide
+3. [Expose Services](tasks/EXPOSE_WITH_LB)  Specific how-to
+4. [Troubleshooting](reference/TROUBLESHOOTING)  When stuck
 
 ---
 
@@ -102,13 +102,13 @@ You deploy Kubernetes workloads and expose them via LoadBalancer services.
 
 You create resources via `itlc` CLI or REST API to manage network infrastructure.
 
- Start here: [**For ITL API Users**](guides/FOR_ITL_API_USERS.md)
+ Start here: [**For ITL API Users**](guides/FOR_ITL_API_USERS)
 
 **Quick path:**
-1. [Quickstart](tutorials/01-QUICKSTART.md)  10 minutes
-2. [For API Users](guides/FOR_ITL_API_USERS.md)  Your guide
-3. [Create VNets](tasks/CREATE_VNETS.md)  Specific how-to
-4. [CLI Reference](reference/CLI_REFERENCE.md)  Command lookup
+1. [Quickstart](tutorials/01-QUICKSTART)  10 minutes
+2. [For API Users](guides/FOR_ITL_API_USERS)  Your guide
+3. [Create VNets](tasks/CREATE_VNETS)  Specific how-to
+4. [CLI Reference](reference/CLI_REFERENCE)  Command lookup
 
 ---
 
@@ -116,13 +116,13 @@ You create resources via `itlc` CLI or REST API to manage network infrastructure
 
 You deploy, monitor, and troubleshoot the Network Provider in production.
 
- Start here: [**For Operators**](guides/FOR_OPERATORS.md)
+ Start here: [**For Operators**](guides/FOR_OPERATORS)
 
 **Quick path:**
-1. [Installation](setup/INSTALLATION.md)  Prerequisites
-2. [Production Deployment](setup/PRODUCTION_DEPLOYMENT.md)  For ops
-3. [For Operators](guides/FOR_OPERATORS.md)  Operational guide
-4. [Troubleshooting](reference/TROUBLESHOOTING.md)  Debug issues
+1. [Installation](setup/INSTALLATION)  Prerequisites
+2. [Production Deployment](setup/PRODUCTION_DEPLOYMENT)  For ops
+3. [For Operators](guides/FOR_OPERATORS)  Operational guide
+4. [Troubleshooting](reference/TROUBLESHOOTING)  Debug issues
 
 ---
 
@@ -130,13 +130,13 @@ You deploy, monitor, and troubleshoot the Network Provider in production.
 
 You design multi-cluster deployments, BGP routing, and site-to-site connectivity.
 
- Start here: [**For Network Architects**](guides/FOR_NETWORK_ARCHITECTS.md)
+ Start here: [**For Network Architects**](guides/FOR_NETWORK_ARCHITECTS)
 
 **Quick path:**
-1. [Architecture](concepts/ARCHITECTURE.md)  System design
-2. [Multi-Cluster Design](concepts/MULTI_CLUSTER.md)  3-cluster model
-3. [For Architects](guides/FOR_NETWORK_ARCHITECTS.md)  Your guide
-4. [BGP Setup](setup/BGP_VLAN_SETUP.md)  Router config
+1. [Architecture](concepts/ARCHITECTURE)  System design
+2. [Multi-Cluster Design](concepts/MULTI_CLUSTER)  3-cluster model
+3. [For Architects](guides/FOR_NETWORK_ARCHITECTS)  Your guide
+4. [BGP Setup](setup/BGP_VLAN_SETUP)  Router config
 
 ---
 
@@ -151,7 +151,7 @@ You design multi-cluster deployments, BGP routing, and site-to-site connectivity
 4. Access: curl http://10.200.0.50
 ```
 
- Full guide: [Expose Services](tasks/EXPOSE_WITH_LB.md)
+ Full guide: [Expose Services](tasks/EXPOSE_WITH_LB)
 
 ---
 
@@ -164,7 +164,7 @@ You design multi-cluster deployments, BGP routing, and site-to-site connectivity
 4. Verify: Policy created  DNS resolves  Traffic flows
 ```
 
- Full guide: [Setup Peering](tasks/SETUP_PEERING.md)
+ Full guide: [Setup Peering](tasks/SETUP_PEERING)
 
 ---
 
@@ -177,7 +177,7 @@ You design multi-cluster deployments, BGP routing, and site-to-site connectivity
 4. Verify: Health checks  Traffic tests  Monitoring
 ```
 
- Full guide: [Production Deployment](setup/PRODUCTION_DEPLOYMENT.md)
+ Full guide: [Production Deployment](setup/PRODUCTION_DEPLOYMENT)
 
 ---
 
@@ -236,30 +236,30 @@ docs/
 ## Quick Navigation
 
 **By user type:**
-- Kubernetes developer?  [FOR_K8S_DEVELOPERS.md](guides/FOR_K8S_DEVELOPERS.md)
-- ITL API user?  [FOR_ITL_API_USERS.md](guides/FOR_ITL_API_USERS.md)
-- Operator?  [FOR_OPERATORS.md](guides/FOR_OPERATORS.md)
-- Network architect?  [FOR_NETWORK_ARCHITECTS.md](guides/FOR_NETWORK_ARCHITECTS.md)
+- Kubernetes developer?  [FOR_K8S_DEVELOPERS.md](guides/FOR_K8S_DEVELOPERS)
+- ITL API user?  [FOR_ITL_API_USERS.md](guides/FOR_ITL_API_USERS)
+- Operator?  [FOR_OPERATORS.md](guides/FOR_OPERATORS)
+- Network architect?  [FOR_NETWORK_ARCHITECTS.md](guides/FOR_NETWORK_ARCHITECTS)
 
 **By task:**
-- Create a VNet  [CREATE_VNETS.md](tasks/CREATE_VNETS.md)
-- Expose a service  [EXPOSE_WITH_LB.md](tasks/EXPOSE_WITH_LB.md)
-- Setup peering  [SETUP_PEERING.md](tasks/SETUP_PEERING.md)
-- Troubleshoot  [TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
+- Create a VNet  [CREATE_VNETS.md](tasks/CREATE_VNETS)
+- Expose a service  [EXPOSE_WITH_LB.md](tasks/EXPOSE_WITH_LB)
+- Setup peering  [SETUP_PEERING.md](tasks/SETUP_PEERING)
+- Troubleshoot  [TROUBLESHOOTING.md](reference/TROUBLESHOOTING)
 
 **By role:**
-- I deploy apps  [Quickstart](tutorials/01-QUICKSTART.md)
-- I build infrastructure  [BGP_VLAN_SETUP.md](setup/BGP_VLAN_SETUP.md)
-- I need API docs  [API_REFERENCE.md](reference/API_REFERENCE.md)
+- I deploy apps  [Quickstart](tutorials/01-QUICKSTART)
+- I build infrastructure  [BGP_VLAN_SETUP.md](setup/BGP_VLAN_SETUP)
+- I need API docs  [API_REFERENCE.md](reference/API_REFERENCE)
 
 ---
 
 ## Getting Help
 
-- **Quick questions?** Check [TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
-- **Command syntax?** See [CLI_REFERENCE.md](reference/CLI_REFERENCE.md)
-- **API endpoints?** Visit [API_REFERENCE.md](reference/API_REFERENCE.md)
-- **Need a term defined?** Check [GLOSSARY.md](reference/GLOSSARY.md)
+- **Quick questions?** Check [TROUBLESHOOTING.md](reference/TROUBLESHOOTING)
+- **Command syntax?** See [CLI_REFERENCE.md](reference/CLI_REFERENCE)
+- **API endpoints?** Visit [API_REFERENCE.md](reference/API_REFERENCE)
+- **Need a term defined?** Check [GLOSSARY.md](reference/GLOSSARY)
 - **Still stuck?** Open an issue on GitHub
 
 ---

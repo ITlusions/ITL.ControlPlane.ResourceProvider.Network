@@ -6,7 +6,7 @@ Practical guide for developers and application owners to expose their services w
 
 ## Overview for K8s Users
 
-Once your DevOps team has set up BGP peering and VLAN pools (see [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP.md)), you can expose your applications directly to your physical network without any special configuration.
+Once your DevOps team has set up BGP peering and VLAN pools (see [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP)), you can expose your applications directly to your physical network without any special configuration.
 
 **Quick Example:**
 
@@ -659,7 +659,7 @@ iperf3 -c 10.200.0.50
 
 **For Network Issues:**
 - Contact DevOps team
-- Reference [../TROUBLESHOOTING.md](../TROUBLESHOOTING.md)
+- Reference [../TROUBLESHOOTING.md](../TROUBLESHOOTING)
 - Provide:
   - Service name and namespace
   - External IP (if assigned)
@@ -667,6 +667,6 @@ iperf3 -c 10.200.0.50
   - Network connectivity test results
 
 **Documentation:**
-- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP.md)  Infrastructure setup
-- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE.md)  How everything works
-- [../CONFIGURATION.md](../CONFIGURATION.md)  System configuration
+- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP)  Infrastructure setup
+- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE)  How everything works
+- [../CONFIGURATION.md](../CONFIGURATION)  System configuration

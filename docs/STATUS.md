@@ -104,18 +104,18 @@ docs/
 
  reference/        (0 of 5 files - PENDING)
    API_REFERENCE.md [Pending] (migrate from root)
-   CLI_REFERENCE.md [Pending] (migrate from CLI_IP_COMMANDS.md)
+   CLI_REFERENCE.md [Pending] (migrate from CLI_IP_COMMANDS)
    GLOSSARY.md [Pending]
    TROUBLESHOOTING.md [Pending] (migrate from guides/)
-   IPAM_GUIDE.md [Pending] (migrate from IP_DISCOVERY.md)
+   IPAM_GUIDE.md [Pending] (migrate from IP_DISCOVERY)
 
  README.md [Complete]       (Updated with new structure)
  (Old files below need archival/deletion)
     ARCHITECTURE.md (to move  concepts/)
     BGP_VLAN_SETUP.md (to move  setup/)
-    IP_DISCOVERY.md (to move  reference/IPAM_GUIDE.md)
+    IP_DISCOVERY.md (to move  reference/IPAM_GUIDE)
     API_REFERENCE.md (to move  reference/)
-    CLI_IP_COMMANDS.md (to move  reference/CLI_REFERENCE.md)
+    CLI_IP_COMMANDS.md (to move  reference/CLI_REFERENCE)
     EXAMPLES.md (to refactor into tutorials/)
     CONFIGURATION.md (to move  setup/)
     TROUBLESHOOTING.md (to move  reference/)
@@ -341,7 +341,7 @@ Successfully aligned Network Provider documentation with Attestation Service Jek
 
 #### Key Features
 
-**Jekyll Frontmatter (README.md):**
+**Jekyll Frontmatter (README):**
 ```yaml
 ---
 layout: default
@@ -471,7 +471,7 @@ title: Documentation
 - **Publishing**: Auto-publishes to PyPI on release
 - **Install**: `pip install itl-controlplane-network-pulumi[pulumi]`
 
-**Development Guide:** [PULUMI_DEVELOPMENT_GUIDE.md](../PULUMI_DEVELOPMENT_GUIDE.md)
+**Development Guide:** [PULUMI_DEVELOPMENT_GUIDE.md](../PULUMI_DEVELOPMENT_GUIDE)
 
 ### Planned Components
 
@@ -499,7 +499,7 @@ title: Documentation
 - [x] Pulumi: Native components, same UX as other providers
 
 **Documentation Update:**
-- Updated [tutorials/00-USER_EXAMPLES.md](tutorials/00-USER_EXAMPLES.md) to show: Native components coming soon + interim workaround
+- Updated [tutorials/00-USER_EXAMPLES.md](tutorials/00-USER_EXAMPLES) to show: Native components coming soon + interim workaround
 
 ---
 
@@ -550,8 +550,8 @@ title: Documentation
 - **Overall:** 14 of 33 files (42%)
 
 ### File Sizes
-- Smallest: 300 lines (CONFIGURATION.md)
-- Largest: 1,500 lines (estimated API_REFERENCE.md)
+- Smallest: 300 lines (CONFIGURATION)
+- Largest: 1,500 lines (estimated API_REFERENCE)
 - Average: 450 lines per file
 - Total: 14,800+ lines (estimated final)
 
@@ -575,27 +575,27 @@ title: Documentation
 ### Completed Files (18)
 
 #### Concepts (4)
-- [docs/concepts/OVERVIEW.md](concepts/OVERVIEW.md)  1,300 lines
-- [docs/concepts/MULTI_TENANCY.md](concepts/MULTI_TENANCY.md)  700 lines
-- [docs/concepts/MULTI_CLUSTER.md](concepts/MULTI_CLUSTER.md)  600 lines
-- [docs/concepts/NETWORK_ISOLATION.md](concepts/NETWORK_ISOLATION.md)  700 lines
+- [docs/concepts/OVERVIEW.md](concepts/OVERVIEW)  1,300 lines
+- [docs/concepts/MULTI_TENANCY.md](concepts/MULTI_TENANCY)  700 lines
+- [docs/concepts/MULTI_CLUSTER.md](concepts/MULTI_CLUSTER)  600 lines
+- [docs/concepts/NETWORK_ISOLATION.md](concepts/NETWORK_ISOLATION)  700 lines
 
 #### Guides (7)
-- [docs/guides/FOR_OPERATORS.md](guides/FOR_OPERATORS.md)  700 lines
-- [docs/guides/FOR_NETWORK_ARCHITECTS.md](guides/FOR_NETWORK_ARCHITECTS.md)  900 lines
-- [docs/guides/GETTING_STARTED.md](guides/GETTING_STARTED.md)  800 lines
-- [docs/guides/CONFIGURATION.md](guides/CONFIGURATION.md)  300 lines
-- [docs/guides/TROUBLESHOOTING.md](guides/TROUBLESHOOTING.md)  400 lines
-- [docs/guides/users/KUBERNETES_USER.md](guides/users/KUBERNETES_USER.md)  1,000 lines
-- [docs/guides/users/ITL_API_USER.md](guides/users/ITL_API_USER.md)  1,000 lines
+- [docs/guides/FOR_OPERATORS.md](guides/FOR_OPERATORS)  700 lines
+- [docs/guides/FOR_NETWORK_ARCHITECTS.md](guides/FOR_NETWORK_ARCHITECTS)  900 lines
+- [docs/guides/GETTING_STARTED.md](guides/GETTING_STARTED)  800 lines
+- [docs/guides/CONFIGURATION.md](guides/CONFIGURATION)  300 lines
+- [docs/guides/TROUBLESHOOTING.md](guides/TROUBLESHOOTING)  400 lines
+- [docs/guides/users/KUBERNETES_USER.md](guides/users/KUBERNETES_USER)  1,000 lines
+- [docs/guides/users/ITL_API_USER.md](guides/users/ITL_API_USER)  1,000 lines
 
 #### Setup (3)
-- [docs/setup/INSTALLATION.md](setup/INSTALLATION.md)  600 lines
-- [docs/setup/SECURITY.md](setup/SECURITY.md)  600 lines
-- [docs/setup/PRODUCTION_DEPLOYMENT.md](setup/PRODUCTION_DEPLOYMENT.md)  700 lines
+- [docs/setup/INSTALLATION.md](setup/INSTALLATION)  600 lines
+- [docs/setup/SECURITY.md](setup/SECURITY)  600 lines
+- [docs/setup/PRODUCTION_DEPLOYMENT.md](setup/PRODUCTION_DEPLOYMENT)  700 lines
 
 #### Restructuring (4)
-- [docs/README.md](README.md)  Updated with new structure
+- [docs/README.md](README)  Updated with new structure
 - This status document  350+ lines
 - Total structure: 6 directories created
 - Directory tree: Fully planned

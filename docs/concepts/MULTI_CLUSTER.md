@@ -435,9 +435,9 @@ kubectl --kubeconfig={unreachable-cluster} exec -it -n kube-system ds/cilium -- 
 
 ## Next Steps
 
-- **Ready to deploy?**  [Installation](../setup/INSTALLATION.md)
-- **Need architecture details?**  [Architecture](ARCHITECTURE.md)
-- **Configuring BGP?**  [BGP Setup](../setup/BGP_VLAN_SETUP.md)
+- **Ready to deploy?**  [Installation](../setup/INSTALLATION)
+- **Need architecture details?**  [Architecture](ARCHITECTURE)
+- **Configuring BGP?**  [BGP Setup](../setup/BGP_VLAN_SETUP)
 
 ---
 

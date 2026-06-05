@@ -729,9 +729,9 @@ itlc resource get --resource-type loadBalancers --resource-name myresource --clu
 - `itlc realm --help`
 
 **Network Documentation:**
-- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP.md)  Infrastructure details
-- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE.md)  How everything works
-- [../TROUBLESHOOTING.md](../TROUBLESHOOTING.md)  Debug common issues
+- [../../operations/BGP_VLAN_SETUP.md](../../operations/BGP_VLAN_SETUP)  Infrastructure details
+- [../../technical/ARCHITECTURE.md](../../technical/ARCHITECTURE)  How everything works
+- [../TROUBLESHOOTING.md](../TROUBLESHOOTING)  Debug common issues
 
 **Get Support:**
 - Email: dev@itlusions.com

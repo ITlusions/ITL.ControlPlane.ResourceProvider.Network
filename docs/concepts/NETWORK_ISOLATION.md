@@ -454,9 +454,9 @@ kubectl exec pod-a -n sub-a -- ping pod-b.sub-b.svc.cluster.local
 
 ## Next Steps
 
-- **Creating NSGs?**  [Manage NSGs](../tasks/MANAGE_NSGS.md)
-- **Setting up peering?**  [Setup Peering](../tasks/SETUP_PEERING.md)
-- **Need troubleshooting?**  [Troubleshooting](../reference/TROUBLESHOOTING.md)
+- **Creating NSGs?**  [Manage NSGs](../tasks/MANAGE_NSGS)
+- **Setting up peering?**  [Setup Peering](../tasks/SETUP_PEERING)
+- **Need troubleshooting?**  [Troubleshooting](../reference/TROUBLESHOOTING)
 
 ---
 

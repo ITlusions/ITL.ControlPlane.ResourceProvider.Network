@@ -751,7 +751,7 @@ pulumi.export('vnet_id', vnet_response.json()['id'])
 
 ### Track Development
 
--  **Implementation Plan**: [PULUMI_DEVELOPMENT_GUIDE.md](../../PULUMI_DEVELOPMENT_GUIDE.md)
+-  **Implementation Plan**: [PULUMI_DEVELOPMENT_GUIDE.md](../../PULUMI_DEVELOPMENT_GUIDE)
 -  **GitHub Issue**: Coming soon
 -  **Package**: `itl-controlplane-network-pulumi`
 -  **Timeline**: ~2 weeks
@@ -790,9 +790,9 @@ pulumi.export('vnet_id', vnet_response.json()['id'])
 
 ## Next Steps
 
-- Ready to scale?  [Multi-Subscription Peering](03-MULTI_SUBSCRIPTION.md)
-- Need Kubernetes integration?  [K8s Deployment](../guides/users/KUBERNETES_USER.md)
-- Managing via API?  [API User Guide](../guides/users/ITL_API_USER.md)
+- Ready to scale?  [Multi-Subscription Peering](03-MULTI_SUBSCRIPTION)
+- Need Kubernetes integration?  [K8s Deployment](../guides/users/KUBERNETES_USER)
+- Managing via API?  [API User Guide](../guides/users/ITL_API_USER)
 
 ---
 

@@ -400,9 +400,9 @@ kubectl label namespace {subscription-id} subscription={subscription-id}
 
 ## Next Steps
 
-- **Creating your first VNet?**  [Create VNets](../tasks/CREATE_VNETS.md)
-- **Setting up peering?**  [Setup Peering](../tasks/SETUP_PEERING.md)
-- **Want API details?**  [API Reference](../reference/API_REFERENCE.md)
+- **Creating your first VNet?**  [Create VNets](../tasks/CREATE_VNETS)
+- **Setting up peering?**  [Setup Peering](../tasks/SETUP_PEERING)
+- **Want API details?**  [API Reference](../reference/API_REFERENCE)
 
 ---
 

@@ -191,9 +191,9 @@ async def _create_vnet(resource_id, ...):
 
 ## Next Steps
 
-- **More on multi-tenancy?**  [Multi-Tenancy Model](MULTI_TENANCY.md)
-- **Multi-cluster details?**  [Multi-Cluster Design](MULTI_CLUSTER.md)
-- **Ready to deploy?**  [Installation](../setup/INSTALLATION.md)
+- **More on multi-tenancy?**  [Multi-Tenancy Model](MULTI_TENANCY)
+- **Multi-cluster details?**  [Multi-Cluster Design](MULTI_CLUSTER)
+- **Ready to deploy?**  [Installation](../setup/INSTALLATION)
 
 ---
 

@@ -492,9 +492,9 @@ curl http://localhost:8002/health
 
 ## Next Steps
 
-- **Configure security?**  [Security Setup](SECURITY.md)
-- **Setup for production?**  [Production Deployment](PRODUCTION_DEPLOYMENT.md)
-- **Ready to use?**  [Getting Started](../guides/GETTING_STARTED.md)
+- **Configure security?**  [Security Setup](SECURITY)
+- **Setup for production?**  [Production Deployment](PRODUCTION_DEPLOYMENT)
+- **Ready to use?**  [Getting Started](../guides/GETTING_STARTED)
 
 ---
 
