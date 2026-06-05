@@ -1,0 +1,283 @@
+---
+layout: default
+title: Documentation
+---
+
+# ITL.ControlPlane.ResourceProvider.Network — Documentation
+
+## Overview
+
+The ITL Network Resource Provider delivers Azure-style networking abstractions on Kubernetes with Cilium SDN, enabling:
+
+- **Kubernetes-native** multi-tenant virtual networks
+- **Multi-cluster** resilience (Storage/Data/Compute clusters)
+- **Direct VLAN IP** assignment for external access
+- **Namespace-based** isolation supporting overlapping CIDRs
+- **Azure Portal-compatible** REST API and CLI
+
+---
+
+## I want to...
+
+### 🎓 **Understand how it works**
+
+Get the fundamentals before diving in.
+
+- [**Overview**](concepts/OVERVIEW.md) — What is Network Provider and why you need it
+- [**Architecture**](concepts/ARCHITECTURE.md) — System design, components, data flows
+- [**Multi-Tenancy Model**](concepts/MULTI_TENANCY.md) — Subscription isolation & namespace mapping
+- [**Multi-Cluster Design**](concepts/MULTI_CLUSTER.md) — 3-cluster resilience and failover
+- [**Network Isolation**](concepts/NETWORK_ISOLATION.md) — Cilium policies and security
+
+### � **See examples first**
+
+Real workflows showing how end-users deploy infrastructure.
+
+- [**End-User Examples**](tutorials/00-USER_EXAMPLES.md) — Portal, CLI, Terraform, Bicep examples
+  - Deploy a VNet with subnets via portal (5 min)
+  - Deploy via CLI (itlc commands)
+  - Deploy via Terraform (GitOps-ready)
+  - Deploy via Bicep (Azure-aligned)
+
+### �🚀 **Get started quickly**
+
+Hands-on tutorials to learn by doing.
+
+- [**10-Minute Quickstart**](tutorials/01-QUICKSTART.md) — Local setup with docker-compose
+- [**Multi-Tier App**](tutorials/02-MULTI_TIER_APP.md) — Real-world production setup
+- [**Multi-Subscription**](tutorials/03-MULTI_SUBSCRIPTION.md) — Cross-subscription peering
+- [**VLAN Exposure**](tutorials/04-VLAN_EXPOSURE.md) — BGP and external access
+
+### ⚙️ **Deploy & operate**
+
+Installation and operational procedures.
+
+- [**Installation**](setup/INSTALLATION.md) — Initial setup & prerequisites
+- [**Configuration**](setup/CONFIGURATION.md) — Environment variables & multi-cluster
+- [**BGP + VLAN Setup**](setup/BGP_VLAN_SETUP.md) — Router configuration & peering
+- [**Production Deployment**](setup/PRODUCTION_DEPLOYMENT.md) — High availability
+- [**Security Best Practices**](setup/SECURITY.md) — Hardening & compliance
+
+### 📚 **Learn specific how-to guides**
+
+Detailed instructions for specific tasks.
+
+- [**Create Virtual Networks**](tasks/CREATE_VNETS.md) — VNets and subnets
+- [**Set Up Peering**](tasks/SETUP_PEERING.md) — Connect subscriptions
+- [**Expose Services**](tasks/EXPOSE_WITH_LB.md) — LoadBalancers & Application Gateways
+- [**Private Link Setup**](tasks/SETUP_PRIVATE_LINK.md) — Cross-subscription private endpoints
+- [**Network Security Groups**](tasks/MANAGE_NSGS.md) — Create & manage NSGs
+- [**Monitor IP Allocation**](tasks/MONITOR_IPS.md) — IP discovery & IPAM
+- [**Scale Clusters**](tasks/SCALE_CLUSTERS.md) — Add nodes & manage capacity
+
+### 🔍 **Look up references**
+
+Quick lookups and technical specifications.
+
+- [**API Reference**](reference/API_REFERENCE.md) — All REST endpoints (ARM-style)
+- [**CLI Reference**](reference/CLI_REFERENCE.md) — itlc commands & examples
+- [**Glossary**](reference/GLOSSARY.md) — Key terms and definitions
+- [**Troubleshooting**](reference/TROUBLESHOOTING.md) — Common issues & solutions
+- [**IPAM Guide**](reference/IPAM_GUIDE.md) — IP address management
+
+---
+
+## I'm a...
+
+### 👨‍💻 **Kubernetes Developer**
+
+You deploy Kubernetes workloads and expose them via LoadBalancer services.
+
+→ Start here: [**For Kubernetes Users**](guides/FOR_K8S_DEVELOPERS.md)
+
+**Quick path:**
+1. [Quickstart](tutorials/01-QUICKSTART.md) — 10 minutes
+2. [For K8s Users](guides/FOR_K8S_DEVELOPERS.md) — Your guide
+3. [Expose Services](tasks/EXPOSE_WITH_LB.md) — Specific how-to
+4. [Troubleshooting](reference/TROUBLESHOOTING.md) — When stuck
+
+---
+
+### 🔧 **ITL ControlPlane API User**
+
+You create resources via `itlc` CLI or REST API to manage network infrastructure.
+
+→ Start here: [**For ITL API Users**](guides/FOR_ITL_API_USERS.md)
+
+**Quick path:**
+1. [Quickstart](tutorials/01-QUICKSTART.md) — 10 minutes
+2. [For API Users](guides/FOR_ITL_API_USERS.md) — Your guide
+3. [Create VNets](tasks/CREATE_VNETS.md) — Specific how-to
+4. [CLI Reference](reference/CLI_REFERENCE.md) — Command lookup
+
+---
+
+### 🛠️ **Operator / SRE**
+
+You deploy, monitor, and troubleshoot the Network Provider in production.
+
+→ Start here: [**For Operators**](guides/FOR_OPERATORS.md)
+
+**Quick path:**
+1. [Installation](setup/INSTALLATION.md) — Prerequisites
+2. [Production Deployment](setup/PRODUCTION_DEPLOYMENT.md) — For ops
+3. [For Operators](guides/FOR_OPERATORS.md) — Operational guide
+4. [Troubleshooting](reference/TROUBLESHOOTING.md) — Debug issues
+
+---
+
+### 🏗️ **Network Architect**
+
+You design multi-cluster deployments, BGP routing, and site-to-site connectivity.
+
+→ Start here: [**For Network Architects**](guides/FOR_NETWORK_ARCHITECTS.md)
+
+**Quick path:**
+1. [Architecture](concepts/ARCHITECTURE.md) — System design
+2. [Multi-Cluster Design](concepts/MULTI_CLUSTER.md) — 3-cluster model
+3. [For Architects](guides/FOR_NETWORK_ARCHITECTS.md) — Your guide
+4. [BGP Setup](setup/BGP_VLAN_SETUP.md) — Router config
+
+---
+
+## Common Scenarios
+
+### Scenario: Deploy a web application with external access
+
+```
+1. Read:   Quickstart → For K8s Users
+2. Do:     Create VNet → Deploy app → Expose as LoadBalancer
+3. Result: Service gets VLAN IP automatically (e.g., 10.200.0.50)
+4. Access: curl http://10.200.0.50
+```
+
+→ Full guide: [Expose Services](tasks/EXPOSE_WITH_LB.md)
+
+---
+
+### Scenario: Multi-subscription peering
+
+```
+1. Read:   Multi-Tenancy Model → For API Users
+2. Do:     Create VNets in each subscription → Create peering
+3. Result: Pods can communicate across subscriptions
+4. Verify: Policy created → DNS resolves → Traffic flows
+```
+
+→ Full guide: [Setup Peering](tasks/SETUP_PEERING.md)
+
+---
+
+### Scenario: Set up production deployment
+
+```
+1. Read:   Architecture → Installation → Production Deployment
+2. Do:     Configure clusters → Deploy Provider → Setup BGP
+3. Result: Multi-cluster network with HA and failover
+4. Verify: Health checks → Traffic tests → Monitoring
+```
+
+→ Full guide: [Production Deployment](setup/PRODUCTION_DEPLOYMENT.md)
+
+---
+
+## File Structure
+
+```
+docs/
+├── README.md (this file)
+│
+├── concepts/              # Understand the platform
+│   ├── OVERVIEW.md
+│   ├── ARCHITECTURE.md
+│   ├── MULTI_TENANCY.md
+│   ├── MULTI_CLUSTER.md
+│   └── NETWORK_ISOLATION.md
+│
+├── tutorials/             # Try the platform
+│   ├── 01-QUICKSTART.md
+│   ├── 02-MULTI_TIER_APP.md
+│   ├── 03-MULTI_SUBSCRIPTION.md
+│   └── 04-VLAN_EXPOSURE.md
+│
+├── setup/                 # Deploy & configure
+│   ├── INSTALLATION.md
+│   ├── CONFIGURATION.md
+│   ├── BGP_VLAN_SETUP.md
+│   ├── PRODUCTION_DEPLOYMENT.md
+│   └── SECURITY.md
+│
+├── tasks/                 # Learn how to...
+│   ├── CREATE_VNETS.md
+│   ├── SETUP_PEERING.md
+│   ├── EXPOSE_WITH_LB.md
+│   ├── SETUP_PRIVATE_LINK.md
+│   ├── MANAGE_NSGS.md
+│   ├── MONITOR_IPS.md
+│   ├── SCALE_CLUSTERS.md
+│   └── MONITORING.md
+│
+├── reference/             # Look it up
+│   ├── API_REFERENCE.md
+│   ├── CLI_REFERENCE.md
+│   ├── GLOSSARY.md
+│   ├── TROUBLESHOOTING.md
+│   └── IPAM_GUIDE.md
+│
+└── guides/                # Audience-specific paths
+    ├── FOR_K8S_DEVELOPERS.md
+    ├── FOR_ITL_API_USERS.md
+    ├── FOR_OPERATORS.md
+    └── FOR_NETWORK_ARCHITECTS.md
+```
+
+---
+
+## Quick Navigation
+
+**By user type:**
+- Kubernetes developer? → [FOR_K8S_DEVELOPERS.md](guides/FOR_K8S_DEVELOPERS.md)
+- ITL API user? → [FOR_ITL_API_USERS.md](guides/FOR_ITL_API_USERS.md)
+- Operator? → [FOR_OPERATORS.md](guides/FOR_OPERATORS.md)
+- Network architect? → [FOR_NETWORK_ARCHITECTS.md](guides/FOR_NETWORK_ARCHITECTS.md)
+
+**By task:**
+- Create a VNet → [CREATE_VNETS.md](tasks/CREATE_VNETS.md)
+- Expose a service → [EXPOSE_WITH_LB.md](tasks/EXPOSE_WITH_LB.md)
+- Setup peering → [SETUP_PEERING.md](tasks/SETUP_PEERING.md)
+- Troubleshoot → [TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
+
+**By role:**
+- I deploy apps → [Quickstart](tutorials/01-QUICKSTART.md)
+- I build infrastructure → [BGP_VLAN_SETUP.md](setup/BGP_VLAN_SETUP.md)
+- I need API docs → [API_REFERENCE.md](reference/API_REFERENCE.md)
+
+---
+
+## Getting Help
+
+- **Quick questions?** Check [TROUBLESHOOTING.md](reference/TROUBLESHOOTING.md)
+- **Command syntax?** See [CLI_REFERENCE.md](reference/CLI_REFERENCE.md)
+- **API endpoints?** Visit [API_REFERENCE.md](reference/API_REFERENCE.md)
+- **Need a term defined?** Check [GLOSSARY.md](reference/GLOSSARY.md)
+- **Still stuck?** Open an issue on GitHub
+
+---
+
+## Key Features
+
+✅ **Azure-style networking** — VNets, subnets, NSGs, load balancers  
+✅ **Multi-tenant isolation** — Namespace-based with Cilium policies  
+✅ **Direct VLAN IPs** — BGP advertises external IPs automatically  
+✅ **Multi-cluster resilience** — Deploy to storage, data, compute clusters  
+✅ **ClusterMesh routing** — Pods communicate across clusters  
+✅ **Overlapping CIDRs** — Same 10.0.0.0/16 in different subscriptions  
+✅ **Cross-subscription peering** — Network policies bridge subscriptions  
+✅ **Private Link** — Endpoint-based service exposure  
+✅ **REST API** — Full ITL ControlPlane integration  
+
+---
+
+**Last Updated:** June 2026  
+**Current Version:** 0.1.0  
+**Status:** Production Ready

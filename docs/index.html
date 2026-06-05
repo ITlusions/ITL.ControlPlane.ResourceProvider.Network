@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ITL.ControlPlane.ResourceProvider.Network — Kubernetes Networking on Cilium</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Azure-style networking abstractions on Kubernetes with Cilium SDN. Multi-tenant isolation, multi-cluster resilience, direct VLAN IP assignment, and overlapping CIDR support for ITL Control Plane." />
+  <meta name="keywords" content="Kubernetes networking, Cilium SDN, multi-tenant, virtual networks, network security, NSG, load balancer, private link, itlc CLI, infrastructure as code, Terraform, Bicep, Pulumi, FastAPI, Python, multi-cluster, BGP, VLAN" />
+  <meta name="author" content="ITLusions" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://itlusions.github.io/ITL.ControlPlane.ResourceProvider.Network/" />
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0d1117" />
+  <meta name="msapplication-TileColor" content="#0d1117" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://itlusions.github.io/ITL.ControlPlane.ResourceProvider.Network/" />
+  <meta property="og:title" content="ITL.ControlPlane.ResourceProvider.Network — Kubernetes Networking" />
+  <meta property="og:description" content="Azure-style networking on Kubernetes. Multi-tenant VNets, multi-cluster resilience, Cilium SDN, direct VLAN IP assignment." />
+  <meta property="og:site_name" content="ITL ControlPlane Network Provider" />
+  
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --border: #30363d;
+      --accent: #1f6feb;
+      --accent-glow: rgba(31, 111, 235, 0.15);
+      --accent2: #58a6ff;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --success: #3fb950;
+      --tag-bg: #1f3347;
+      --tag-text: #58a6ff;
+      --radius: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 17, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      font-size: 0.875rem;
+    }
+    
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background: radial-gradient(ellipse at 50% 0%, rgba(31, 111, 235, 0.12) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      border-radius: 2rem;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, #e6edf3 0%, #58a6ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 2.5rem;
+    }
+    
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      border: none;
+    }
+    
+    .btn:hover { opacity: 0.85; transform: translateY(-1px); text-decoration: none; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+    
+    .badge-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      padding: 3px 12px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    
+    .badge-pill .dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-right: 5px;
+      background: var(--success);
+    }
+
+    /* Layout */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+    section { padding: 5rem 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.75rem;
+    }
+    
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+    }
+    
+    .section-sub {
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 3rem;
+    }
+
+    /* Highlights */
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    
+    .highlight-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .highlight-card:hover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+    
+    .highlight-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--surface2);
+      border-radius: var(--radius);
+      color: var(--accent2);
+      font-size: 1.5rem;
+    }
+    
+    .highlight-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    .highlight-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Deployment methods */
+    .methods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    
+    .method-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    
+    .method-card:hover {
+      border-color: var(--accent2);
+      background: var(--accent-glow);
+    }
+    
+    .method-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      background: var(--surface2);
+      border-radius: var(--radius);
+      color: var(--accent2);
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .method-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .method-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    
+    .feature-icon { display: flex; align-items: center; margin-bottom: 0.75rem; color: var(--accent2); }
+    .feature-icon svg { width: 24px; height: 24px; flex-shrink: 0; }
+    .feature-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .feature-desc { font-size: 0.83rem; color: var(--muted); }
+
+    /* Docs */
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .doc-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      color: var(--text);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    
+    .doc-link:hover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      text-decoration: none;
+      color: var(--accent2);
+    }
+    
+    .doc-icon { display: flex; align-items: center; flex-shrink: 0; color: var(--accent2); }
+    .doc-icon svg { width: 20px; height: 20px; }
+    .doc-title { font-weight: 500; font-size: 0.9rem; }
+    .doc-desc { font-size: 0.78rem; color: var(--muted); margin-top: 1px; }
+
+    /* Stack */
+    .stack-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .stack-tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+
+    /* Hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 22px; height: 16px;
+      background: none; border: none;
+      cursor: pointer; padding: 0; flex-shrink: 0;
+    }
+    
+    .nav-toggle span {
+      display: block; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .nav-links { gap: 1rem; font-size: 0.82rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 1rem; }
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 56px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        gap: 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a { display: block; padding: 0.75rem 1.5rem; color: var(--text); font-size: 0.95rem; }
+      .nav-links a:hover { background: var(--surface2); text-decoration: none; }
+      .hero { padding: 4rem 1.25rem 3rem; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 280px; justify-content: center; }
+      .container { padding: 0 1.25rem; }
+      section { padding: 3.5rem 0; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.85rem; }
+      .badges { gap: 0.4rem; }
+      .badge-pill { font-size: 0.7rem; padding: 3px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2v20M2 12h20M6 6l12 12M18 6l-12 12"/>
+    </svg>
+    ITL.ControlPlane.ResourceProvider.Network
+  </div>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" id="nav-toggle">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="README.md">Documentation</a></li>
+    <li><a href="#highlights">Highlights</a></li>
+    <li><a href="#deploy">Deploy</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="tutorials/00-USER_EXAMPLES.md">Examples</a></li>
+    <li><a href="https://github.com/ITlusions/ITL.ControlPlane.ResourceProvider.Network" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+    Cilium SDN · Multi-Tenant · Multi-Cluster · FastAPI · Kubernetes
+  </div>
+  <h1>Azure Networking<br>on Kubernetes</h1>
+  <p>Kubernetes-native networking abstractions with Cilium SDN, multi-tenant isolation, direct VLAN IP assignment, and multi-cluster resilience. Deploy once, scale anywhere.</p>
+  <div class="hero-actions">
+    <a href="README.md" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Start Documentation
+    </a>
+    <a href="https://github.com/ITlusions/ITL.ControlPlane.ResourceProvider.Network" class="btn btn-secondary" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      View on GitHub
+    </a>
+    <a href="concepts/ARCHITECTURE.md" class="btn btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Architecture
+    </a>
+  </div>
+  <div class="badges">
+    <span class="badge-pill"><span class="dot"></span>Cilium 1.15+</span>
+    <span class="badge-pill"><span class="dot"></span>Kubernetes 1.28+</span>
+    <span class="badge-pill"><span class="dot"></span>Python 3.12+</span>
+    <span class="badge-pill"><span class="dot"></span>FastAPI</span>
+    <span class="badge-pill"><span class="dot"></span>PostgreSQL</span>
+    <span class="badge-pill"><span class="dot"></span>Multi-Cluster</span>
+  </div>
+</header>
+
+<!-- Highlights -->
+<section id="highlights">
+  <div class="container">
+    <div class="section-label">Key Capabilities</div>
+    <h2 class="section-title">Everything you need for enterprise networking</h2>
+    <p class="section-sub">From development to production — all integrated, all managed.</p>
+
+    <div class="highlights-grid">
+      <div class="highlight-card">
+        <div class="highlight-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div class="highlight-title">Multi-Tenant Isolation</div>
+        <div class="highlight-desc">One namespace per subscription with overlapping CIDR support via Cilium namespace boundaries.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="highlight-title">Multi-Cluster Resilience</div>
+        <div class="highlight-desc">3-cluster architecture (Storage, Data, Compute) with automatic failover and ClusterMesh synchronization.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        <div class="highlight-title">Direct VLAN IP Assignment</div>
+        <div class="highlight-desc">Services get routable IPs from your network pools via BGP. External access without NAT.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="highlight-title">Zero-Trust Security</div>
+        <div class="highlight-desc">Cilium network policies, NSG rules, mTLS, and audit logging by default.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+        <div class="highlight-title">5 Deployment Methods</div>
+        <div class="highlight-desc">Portal, CLI, Terraform, Bicep, Pulumi. Choose your workflow.</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"/></svg></div>
+        <div class="highlight-title">Fully Managed</div>
+        <div class="highlight-desc">VNets, Subnets, NSGs, Load Balancers, Private Link. No manual Cilium management.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deployment methods -->
+<section id="deploy">
+  <div class="container">
+    <div class="section-label">Deployment Methods</div>
+    <h2 class="section-title">Choose your method</h2>
+    <p class="section-sub">Deploy infrastructure your way. All methods target the same APIs.</p>
+
+    <div class="methods-grid">
+      <div class="method-card">
+        <div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="14" rx="2" ry="2"/><path d="M7 18c1.5 1.5 2.5 3 5 3s3.5-1.5 5-3"/></svg></div>
+        <div class="method-title">Web Portal</div>
+        <div class="method-desc">Visual step-by-step. Perfect for learning and demos.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 12h8M6 8h2M6 16h2"/></svg></div>
+        <div class="method-title">CLI (itlc)</div>
+        <div class="method-desc">Fast and scriptable. Great for operators.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"/><line x1="12" y1="12" x2="20" y2="7.5"/><line x1="12" y1="12" x2="12" y2="21"/><line x1="12" y1="12" x2="4" y2="7.5"/></svg></div>
+        <div class="method-title">Terraform</div>
+        <div class="method-desc">HCL. Industry standard and GitOps-ready.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div class="method-title">Bicep</div>
+        <div class="method-desc">Azure-aligned. Fastest path for Azure teams.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5l8-3 8 3v12a4 4 0 0 1-8 0V5a4 4 0 0 1-8 0v12"/></svg></div>
+        <div class="method-title">Pulumi</div>
+        <div class="method-desc">Python IaC. In development</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="tutorials/00-USER_EXAMPLES.md" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        See Examples
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Enterprise-grade networking</h2>
+    <p class="section-sub">Purpose-built for multi-tenant Kubernetes at scale.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"/><line x1="12" y1="12" x2="20" y2="7.5"/><line x1="12" y1="12" x2="12" y2="21"/><line x1="12" y1="12" x2="4" y2="7.5"/></svg>
+        </div>
+        <div class="feature-title">Virtual Networks</div>
+        <div class="feature-desc">Create and manage isolated networks with configurable address spaces.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="feature-title">Network Security</div>
+        <div class="feature-desc">NSGs, Cilium policies, mTLS, and zero-trust security defaults.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        </div>
+        <div class="feature-title">Load Balancing</div>
+        <div class="feature-desc">Layer 4 and Layer 7 load balancing with automatic VLAN IP assignment.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><path d="M3 7h16"/></svg>
+        </div>
+        <div class="feature-title">Private Link</div>
+        <div class="feature-desc">Cross-subscription private endpoints with DNS integration.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">BGP Routing</div>
+        <div class="feature-desc">Direct VLAN IP advertisement to physical network. No NAT required.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12a7 7 0 0 0-7-7 7 7 0 0 0-7 7 7 7 0 0 0 7 7 7 7 0 0 0 7-7z"/><path d="M12 9v6M9 12h6"/></svg>
+        </div>
+        <div class="feature-title">Observability</div>
+        <div class="feature-desc">Prometheus metrics, Grafana dashboards, and audit logging included.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-title">Multi-Tenant Security</div>
+        <div class="feature-desc">Strict namespace isolation and overlapping CIDR support per tenant.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><path d="M7 6h4v12H7z"/><path d="M13 6h4v8h-4z"/></svg>
+        </div>
+        <div class="feature-title">IP Address Management</div>
+        <div class="feature-desc">Automatic IP allocation with pool management and capacity planning.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Docs -->
+<section id="docs">
+  <div class="container">
+    <div class="section-label">Documentation</div>
+    <h2 class="section-title">Complete guides and references</h2>
+    <p class="section-sub">Learn by doing with hands-on tutorials and task guides.</p>
+
+    <div class="docs-grid">
+      <a href="tutorials/00-USER_EXAMPLES.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div>
+          <div class="doc-title">Examples</div>
+          <div class="doc-desc">5 deployment methods</div>
+        </div>
+      </a>
+      <a href="tutorials/01-QUICKSTART.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div>
+          <div class="doc-title">Quickstart</div>
+          <div class="doc-desc">10-minute setup</div>
+        </div>
+      </a>
+      <a href="guides/FOR_OPERATORS.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+          <div class="doc-title">For Operators</div>
+          <div class="doc-desc">Operations guide</div>
+        </div>
+      </a>
+      <a href="guides/FOR_NETWORK_ARCHITECTS.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
+        <div>
+          <div class="doc-title">For Architects</div>
+          <div class="doc-desc">Design patterns</div>
+        </div>
+      </a>
+      <a href="concepts/OVERVIEW.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
+        <div>
+          <div class="doc-title">Overview</div>
+          <div class="doc-desc">Core concepts</div>
+        </div>
+      </a>
+      <a href="concepts/ARCHITECTURE.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+        <div>
+          <div class="doc-title">Architecture</div>
+          <div class="doc-desc">System design</div>
+        </div>
+      </a>
+      <a href="reference/API_REFERENCE.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <div>
+          <div class="doc-title">API Reference</div>
+          <div class="doc-desc">REST endpoints</div>
+        </div>
+      </a>
+      <a href="reference/CLI_REFERENCE.md" class="doc-link">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+        <div>
+          <div class="doc-title">CLI Reference</div>
+          <div class="doc-desc">itlc commands</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack -->
+<section id="stack">
+  <div class="container">
+    <div class="section-label">Technology</div>
+    <h2 class="section-title">Built on proven foundations</h2>
+    <p class="section-sub" style="margin-bottom:2rem;">Chosen for production reliability and operational excellence.</p>
+
+    <div class="stack-row">
+      <span class="stack-tag">Cilium 1.15+</span>
+      <span class="stack-tag">Kubernetes 1.28+</span>
+      <span class="stack-tag">FastAPI</span>
+      <span class="stack-tag">SQLAlchemy (async)</span>
+      <span class="stack-tag">PostgreSQL</span>
+      <span class="stack-tag">Python 3.12+</span>
+      <span class="stack-tag">Weaviate v4</span>
+      <span class="stack-tag">Alembic</span>
+      <span class="stack-tag">Pydantic v2</span>
+      <span class="stack-tag">structlog</span>
+      <span class="stack-tag">BGP</span>
+      <span class="stack-tag">ClusterMesh</span>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>
+    &copy; 2026 <a href="https://github.com/ITlusions" target="_blank" rel="noopener">ITLusions</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://github.com/ITlusions/ITL.ControlPlane.ResourceProvider.Network" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;&middot;&nbsp;
+    <a href="setup/SECURITY.md">Security</a>
+    &nbsp;&middot;&nbsp;
+    <a href="reference/TROUBLESHOOTING.md">Troubleshooting</a>
+    &nbsp;&middot;&nbsp;
+    Part of the <a href="https://github.com/ITlusions" target="_blank" rel="noopener">ITL Control Plane</a>
+  </p>
+</footer>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const links  = document.getElementById('nav-links');
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      links.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', false);
+    });
+  });
+</script>
+
+</body>
+</html>

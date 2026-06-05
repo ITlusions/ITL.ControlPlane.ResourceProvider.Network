@@ -1,0 +1,105 @@
+# Navigation for Network Provider docs
+# Used by Jekyll layout to generate breadcrumbs and sidebar
+
+main:
+  - title: Overview
+    url: /
+    icon: 📖
+  
+  - title: Getting Started
+    url: /tutorials/00-USER_EXAMPLES.md
+    icon: 🚀
+  
+  - title: Concepts
+    url: /concepts/OVERVIEW.md
+    icon: 🎓
+    children:
+      - title: Overview
+        url: /concepts/OVERVIEW.md
+      - title: Architecture
+        url: /concepts/ARCHITECTURE.md
+      - title: Multi-Tenancy
+        url: /concepts/MULTI_TENANCY.md
+      - title: Multi-Cluster Design
+        url: /concepts/MULTI_CLUSTER.md
+      - title: Network Isolation
+        url: /concepts/NETWORK_ISOLATION.md
+  
+  - title: Setup & Deploy
+    url: /setup/INSTALLATION.md
+    icon: ⚙️
+    children:
+      - title: Installation
+        url: /setup/INSTALLATION.md
+      - title: Configuration
+        url: /setup/CONFIGURATION.md
+      - title: Security
+        url: /setup/SECURITY.md
+      - title: Production Deployment
+        url: /setup/PRODUCTION_DEPLOYMENT.md
+      - title: BGP & VLAN
+        url: /setup/BGP_VLAN_SETUP.md
+  
+  - title: How-To Guides
+    url: /guides/FOR_OPERATORS.md
+    icon: 🛠️
+    children:
+      - title: For Operators
+        url: /guides/FOR_OPERATORS.md
+      - title: For Architects
+        url: /guides/FOR_NETWORK_ARCHITECTS.md
+      - title: For K8s Users
+        url: /guides/users/KUBERNETES_USER.md
+      - title: For API Users
+        url: /guides/users/ITL_API_USER.md
+  
+  - title: Tutorials
+    url: /tutorials/01-QUICKSTART.md
+    icon: 📚
+    children:
+      - title: Examples
+        url: /tutorials/00-USER_EXAMPLES.md
+      - title: Quickstart (10 min)
+        url: /tutorials/01-QUICKSTART.md
+      - title: Multi-Tier App
+        url: /tutorials/02-MULTI_TIER_APP.md
+      - title: Multi-Subscription
+        url: /tutorials/03-MULTI_SUBSCRIPTION.md
+      - title: VLAN Exposure
+        url: /tutorials/04-VLAN_EXPOSURE.md
+  
+  - title: Task Reference
+    url: /tasks/CREATE_VNETS.md
+    icon: ✅
+    children:
+      - title: Create VNets
+        url: /tasks/CREATE_VNETS.md
+      - title: Setup Peering
+        url: /tasks/SETUP_PEERING.md
+      - title: Expose with LB
+        url: /tasks/EXPOSE_WITH_LB.md
+      - title: Private Link
+        url: /tasks/SETUP_PRIVATE_LINK.md
+      - title: Manage NSGs
+        url: /tasks/MANAGE_NSGS.md
+      - title: Monitor IPs
+        url: /tasks/MONITOR_IPS.md
+      - title: Scale Clusters
+        url: /tasks/SCALE_CLUSTERS.md
+      - title: Monitoring
+        url: /tasks/MONITORING.md
+  
+  - title: API Reference
+    url: /reference/API_REFERENCE.md
+    icon: 📖
+    children:
+      - title: REST API
+        url: /reference/API_REFERENCE.md
+      - title: CLI (itlc)
+        url: /reference/CLI_REFERENCE.md
+      - title: IPAM Guide
+        url: /reference/IPAM_GUIDE.md
+      - title: Glossary
+        url: /reference/GLOSSARY.md
+      - title: Troubleshooting
+        url: /reference/TROUBLESHOOTING.md

@@ -1,0 +1,46 @@
+title: ITL.ControlPlane.ResourceProvider.Network
+description: Kubernetes-native networking abstraction layer with multi-tenancy, multi-cluster, and Cilium SDN
+keywords: networking, Kubernetes, SDN, Cilium, multi-tenant, multi-cluster, virtual networks, network security, load balancer, private link, itlc CLI, infrastructure as code, Terraform, Bicep, Pulumi, FastAPI, Python
+baseurl: "/ITL.ControlPlane.ResourceProvider.Network"
+url: "https://itlusions.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+# Mermaid diagrams via jekyll-mermaid or passthrough
+plugins:
+  - jekyll-sitemap
+
+# Force include static files (robots.txt, sitemap.xml)
+include:
+  - robots.txt
+  - sitemap.xml
+
+# Apply default layout to all markdown pages that don't specify one
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: default
+
+# Exclude non-doc files
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - "*.py"
+  - "*.sh"
+  - docker-compose.yml
+  - Dockerfile
+  - pyproject.toml
+  - PULUMI_IMPLEMENTATION_PLAN.md
+  - PULUMI_DEVELOPMENT_GUIDE.md
