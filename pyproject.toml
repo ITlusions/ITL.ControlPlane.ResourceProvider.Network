@@ -31,10 +31,9 @@ dependencies = [
     "httpx>=0.25.0",
     "structlog>=23.2.0",
     "sqlalchemy>=2.0.0",
-    # 3.17.0 never existed (psycopg3's actual latest is 3.3.x as of 2026) - confirmed live,
-    # pip install failed outright. Almost certainly a transposed-digit typo for 3.1.7 - also
-    # present, identically, in itl-container-provider's own pyproject.toml.
-    "psycopg[binary]>=3.1.7",
+    # 3.17.0 never existed - confirmed live, pip install failed outright. Pinned to the
+    # actual latest (3.3.6) instead of guessing at the intended typo target.
+    "psycopg[binary]>=3.3.6",
 ]
 
 [project.optional-dependencies]
