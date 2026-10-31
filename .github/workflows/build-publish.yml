@@ -62,9 +62,16 @@ jobs:
         run: python -m twine check dist/*
 
       - name: Test install in a clean venv
+        # --no-deps deliberately - this step only checks the wheel itself packages/installs
+        # correctly, not that its dependencies resolve. Confirmed live on a sibling repo: this
+        # step has no Forgejo credentials at all (those only exist in the later publish job),
+        # so a package depending on another internal-only package (e.g. itl-controlplane-api)
+        # can never resolve here - only on public PyPI, where it was never published. The
+        # publish job's own "Verify it installs from Forgejo" step is where real dependency
+        # resolution (with the right credentials) actually gets tested.
         run: |
           python -m venv test-env
-          test-env/bin/pip install dist/*.whl
+          test-env/bin/pip install --no-deps dist/*.whl
           test-env/bin/pip show ${{ env.PACKAGE_NAME }}
 
       - uses: actions/upload-artifact@v7
