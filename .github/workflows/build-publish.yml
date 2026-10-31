@@ -1,0 +1,139 @@
+name: Build, Test and Publish ITL Network Provider
+
+# Publishes to ITlusions' own Forgejo package registry (git.itlusions.com), not public PyPI -
+# this is internal platform code. Same proven pattern as ITL.ControlPlane.SDK's own workflow
+# (github.com/ITlusions/ITL.ControlPlane.SDK/.github/workflows/build-publish.yml) - see that
+# repo's commit history for the three real bugs found getting this working (unauthenticated
+# verify step, an unpinned-install pip resolver bug, and the public-PyPI-fallback-for-
+# third-party-deps requirement). Verify here checks via `pip show`, not `import <module>`,
+# since this package's own internal module naming isn't assumed.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+env:
+  PACKAGE_NAME: itl-network-provider
+  PYTHON_VERSION: "3.12"
+  FORGEJO_PYPI_URL: https://git.itlusions.com/api/packages/ITlusions/pypi
+  WORKING_DIR: .
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build tools
+        run: python -m pip install --upgrade pip build twine
+
+      - name: Sync pyproject.toml version to the tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        # Confirmed live on a sibling repo's own first run: a tag (v0.1.1) with
+        # pyproject.toml still saying 0.1.0 builds and publishes the STALE version, then the
+        # verify step (correctly) fails trying to install the tag's version, which was never
+        # actually built. Deriving the version from the tag here removes the manual-sync step
+        # entirely rather than relying on remembering to bump pyproject.toml before tagging.
+        run: |
+          python -m pip install --quiet tomli tomli-w
+          python -c "
+          import tomli, tomli_w, os
+          with open('pyproject.toml', 'rb') as f:
+              data = tomli.load(f)
+          data['project']['version'] = os.environ['GITHUB_REF_NAME'].removeprefix('v')
+          with open('pyproject.toml', 'wb') as f:
+              tomli_w.dump(data, f)
+          print('pyproject.toml version set to', data['project']['version'])
+          "
+
+      - name: Build package
+        run: python -m build --sdist --wheel --outdir dist/
+
+      - name: Check package metadata
+        run: python -m twine check dist/*
+
+      - name: Test install in a clean venv
+        run: |
+          python -m venv test-env
+          test-env/bin/pip install dist/*.whl
+          test-env/bin/pip show ${{ env.PACKAGE_NAME }}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: ${{ env.WORKING_DIR }}/dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - run: python -m pip install --upgrade twine
+
+      - name: Publish to Forgejo package registry
+        env:
+          TWINE_REPOSITORY_URL: ${{ env.FORGEJO_PYPI_URL }}
+          TWINE_USERNAME: ${{ secrets.FORGEJO_PACKAGE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.FORGEJO_PACKAGE_TOKEN }}
+        run: twine upload dist/* --verbose
+
+      - name: Verify it installs from Forgejo
+        env:
+          FORGEJO_PACKAGE_USERNAME: ${{ secrets.FORGEJO_PACKAGE_USERNAME }}
+          FORGEJO_PACKAGE_TOKEN: ${{ secrets.FORGEJO_PACKAGE_TOKEN }}
+        run: |
+          python -m venv verify-env
+          RELEASE_VERSION="${GITHUB_REF_NAME#v}"
+          verify-env/bin/pip install \
+            --index-url "https://${FORGEJO_PACKAGE_USERNAME}:${FORGEJO_PACKAGE_TOKEN}@git.itlusions.com/api/packages/ITlusions/pypi/simple/" \
+            --extra-index-url https://pypi.org/simple/ \
+            "${{ env.PACKAGE_NAME }}==${RELEASE_VERSION}"
+          verify-env/bin/pip show ${{ env.PACKAGE_NAME }}
+
+  create-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            ```bash
+            pip install --index-url ${{ env.FORGEJO_PYPI_URL }}/simple/ ${{ env.PACKAGE_NAME }}==${{ github.ref_name }}
+            ```
+
+            Published to ITlusions' own Forgejo package registry (`git.itlusions.com`), not
+            public PyPI - this is internal platform code.
