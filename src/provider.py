@@ -26,6 +26,7 @@ from itl_controlplane_sdk import (
     ResourceResponse,
     ResourceListResponse,
     ProvisioningState,
+    ProviderContext,
     generate_resource_id,
 )
 from itl_controlplane_sdk.persistence import SQLAlchemyStorageEngine
@@ -1293,8 +1294,8 @@ class NetworkProvider(ResourceProvider):
     # SDK-Required Interface Methods
     # ========================================================================
 
-    async def create_or_update_resource(
-        self, request: ResourceRequest
+    async def _do_create_or_update_resource(
+        self, request: ResourceRequest, context: ProviderContext
     ) -> ResourceResponse:
         """Create or update a network resource (SDK interface)."""
         try:
@@ -1358,7 +1359,7 @@ class NetworkProvider(ResourceProvider):
             logger.error(f"Failed to create {request.resource_type}: {str(e)}", exc_info=True)
             return self._error_response(request.resource_type, request.resource_name, str(e))
 
-    async def get_resource(self, request: ResourceRequest) -> ResourceResponse:
+    async def _do_get_resource(self, request: ResourceRequest, context: ProviderContext) -> ResourceResponse:
         """Get a network resource by ID."""
         try:
             resource_id = generate_resource_id(
@@ -1403,7 +1404,7 @@ class NetworkProvider(ResourceProvider):
             logger.error(f"Failed to list {resource_type}: {str(e)}", exc_info=True)
             return ResourceListResponse(value=[])
 
-    async def delete_resource(self, request: ResourceRequest) -> ResourceResponse:
+    async def _do_delete_resource(self, request: ResourceRequest, context: ProviderContext) -> ResourceResponse:
         """Delete a network resource."""
         try:
             resource_id = generate_resource_id(
