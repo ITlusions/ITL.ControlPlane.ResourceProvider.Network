@@ -20,8 +20,8 @@ from contextlib import asynccontextmanager
 from typing import Optional
 
 from fastapi import FastAPI, Query
-from itl_controlplane_sdk.base import BaseProviderServer
-from itl_controlplane_sdk.exceptions import ProviderException
+from itl_controlplane_sdk.api import BaseProviderServer
+from itl_controlplane_sdk.core.exceptions import ProviderError
 
 from src.provider import NetworkProvider
 from src.ip_management import IPManager
